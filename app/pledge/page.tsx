@@ -4,6 +4,12 @@ import { useRef, useEffect, useState } from 'react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
+const courses = [
+  'AI Agent & 언리얼 개발 협업과정',
+  '게임 개발자 양성과정',
+  'AI기반 FE & BE 협업과정'
+];
+
 export default function PledgePage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const drawing = useRef(false);
@@ -308,12 +314,6 @@ export default function PledgePage() {
     }
   };
 
-
-  const courses = [
-    'AI Agent & 언리얼 개발 협업과정',
-    '게임 개발자 양성과정',
-    'AI기 기반 FE & BE 협업과정'
-  ];
   return (
     <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
       <article ref={articleRef} style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>

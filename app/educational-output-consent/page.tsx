@@ -3,36 +3,40 @@
 import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 
+const courses = [
+  'AI Agent & 언리얼 개발 협업과정',
+  '게임 개발자 양성과정',
+  'AI기반 FE & BE 협업과정'
+];
+
+// 연락처 포맷팅 함수 (010-0000-0000 형식)
+const formatPhoneNumber = (value: string) => {
+  // 숫자만 추출
+  const numbers = value.replace(/[^\\d]/g, '');
+  
+  // 11자리 초과 시 제한
+  const limitedNumbers = numbers.slice(0, 11);
+  
+  // 형식 적용
+  if (limitedNumbers.length <= 3) {
+    return limitedNumbers;
+  } else if (limitedNumbers.length <= 7) {
+    return `${limitedNumbers.slice(0, 3)}-${limitedNumbers.slice(3)}`;
+  } else {
+    return `${limitedNumbers.slice(0, 3)}-${limitedNumbers.slice(3, 7)}-${limitedNumbers.slice(7)}`;
+  }
+};
+
 export default function EducationalOutputConsentPage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const drawing = useRef(false);
   const [course, setCourse] = useState('');
-  const [isCourseOpen, setIsCourseOpen] = useState(false);
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('010-0000-0000');
   const [agreed, setAgreed] = useState(false);
   const [hasSignature, setHasSignature] = useState(false);
   const [isContactFocused, setIsContactFocused] = useState(false);
-
-  // 연락처 포맷팅 함수 (010-0000-0000 형식)
-  const formatPhoneNumber = (value: string) => {
-    // 숫자만 추출
-    const numbers = value.replace(/[^\\d]/g, '');
-    
-    // 11자리 초과 시 제한
-    const limitedNumbers = numbers.slice(0, 11);
-    
-    // 형식 적용
-    if (limitedNumbers.length <= 3) {
-      return limitedNumbers;
-    } else if (limitedNumbers.length <= 7) {
-      return `${limitedNumbers.slice(0, 3)}-${limitedNumbers.slice(3)}`;
-    } else {
-      return `${limitedNumbers.slice(0, 3)}-${limitedNumbers.slice(3, 7)}-${limitedNumbers.slice(7)}`;
-    }
-  };
-
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -114,12 +118,6 @@ export default function EducationalOutputConsentPage() {
       agreed
     );
   };
-
-  const courses = [
-    'AI Agent & 언리얼 개발 협업과정',
-    '게임 개발자 양성과정',
-    'AI기반 FE & BE 협업과정'
-  ];
   return (
     <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
       <article style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>

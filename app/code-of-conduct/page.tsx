@@ -3,11 +3,16 @@
 import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 
+const courses = [
+  'AI Agent & 언리얼 개발 협업과정',
+  '게임 개발자 양성과정',
+  'AI기반 FE & BE 협업과정',
+];
+
 export default function CodeOfConductPage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const drawing = useRef(false);
   const [course, setCourse] = useState('');
-  const [isCourseOpen, setIsCourseOpen] = useState(false);
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('010-0000-0000');
@@ -119,13 +124,7 @@ export default function CodeOfConductPage() {
       hasSignature &&
       agreed
     );
-  };
-  const courses = [
-    'AI Agent & 언리얼 개발 협업과정',
-    '게임 개발자 양성과정',
-    'AI기반 FE & BE 협업과정',
-  ];
-  return (
+  };  return (
     <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
       <article style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>
         <div style={{ marginBottom: 16 }}>
