@@ -12,7 +12,7 @@ const courses = [
 // 연락처 포맷팅 함수 (010-0000-0000 형식)
 const formatPhoneNumber = (value: string) => {
   // 숫자만 추출
-  const numbers = value.replace(/[^\\d]/g, '');
+  const numbers = value.replace(/[^\d]/g, '');
   
   // 11자리 초과 시 제한
   const limitedNumbers = numbers.slice(0, 11);
@@ -215,7 +215,8 @@ export default function PrivacyConsentPage() {
 
         <p style={{ marginTop: 20 }}>
           「개인정보보호법」등 관련 법규에 따라 본인은 위와 같이 개인정보 수집 및 활용, 제3자에게 개인정보 제공에 동의합니다.
-        </p>        <section style={{ marginTop: 40 }}>
+        </p>        
+        <section style={{ marginTop: 40 }}>
           {/* 입력 영역 */}
           <div style={{ marginTop: 40, border: '1px solid #eee', borderRadius: 8, padding: 24 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 40px' }}>
@@ -409,7 +410,6 @@ export default function PrivacyConsentPage() {
                 }}
               />
             </label>
-          </div>
           </div>
           <div style={{ marginTop: 32, marginBottom: 24 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
