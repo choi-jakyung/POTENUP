@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 
-export default function PrivacyConsentPage() {
+export default function EducationalOutputConsentPage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const drawing = useRef(false);
   const [course, setCourse] = useState('');
@@ -129,97 +129,52 @@ export default function PrivacyConsentPage() {
           <Image src="/wanted-logo.png" alt="wanted logo" width={96} height={96} style={{ objectFit: 'contain' }} unoptimized />
         </div>
         <h1 style={{ fontSize: 24, fontWeight: 'bold', color: '#333', marginBottom: 40, textAlign: 'center' }}>
-          개인정보 수집 · 이용 · 제공 동의서
+          교육 산출물 활용 동의서
         </h1>
 
-        {/* 개인정보 수집·이용에 관한 사항 */}
-        <div style={{ marginBottom: 30 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 'bold', color: '#333', marginBottom: 10 }}>
-            개인정보의 수집 · 이용에 관한 사항
-          </h2>
-          <p>
-            (주)원티드랩에서는「포텐업 교육과정」운영을 위하여 아래와 같이 개인정보를 수집 및 이용하고자 합니다. 이용자가
-            제공하는 모든 정보는「개인정보보호법」등 관련 법규에 의거하여 필요한 한도 내에서만 활용되며 사용되지 않습니다.
-          </p>
-
-          <div style={{ marginTop: 20, borderTop: '1px solid #000', borderBottom: '1px solid #000' }}>
-            <div style={{ display: 'flex', borderBottom: '1px solid #eee' }}>
-              <div style={{ padding: '10px 14px', minWidth: 150, background: '#f8f8f8', fontWeight: 'bold', borderRight: '1px solid #eee' }}>
-                1. 개인정보 수집 항목
-              </div>
-              <div style={{ padding: '10px 14px', flex: 1 }}>
-                참여자 성명, 연락처, 생년월일, 이메일, 거주지, 학력, 경력사항(근무이력, 외국어, 외국인 링크 등), 건강보험자격
-              </div>
-            </div>
-            <div style={{ display: 'flex' }}>
-              <div style={{ padding: '10px 14px', minWidth: 150, background: '#f8f8f8', fontWeight: 'bold', borderRight: '1px solid #eee' }}>
-                2. 개인정보 수집 및 이용목적
-              </div>
-              <div style={{ padding: '10px 14px', flex: 1 }}>
-                (주)원티드랩은 지원자의 개인정보를 다음의 목적을 위해서만 활용하며 수집된 정보는 아래 명시된 내용 이외의 목적으로 사용하지 않습니다.
-                <ol style={{ listStyleType: 'decimal', paddingLeft: 20, margin: '8px 0' }}>
-                  <li>모집 접수, 심사, 선정, 지원, 추천, 취업관리 등</li>
-                  <li>포텐업 교육과정 운영 및 관련된 부분</li>
-                  <li>대외 홍보</li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 개인정보의 제3자 제공 */}
-        <div style={{ marginBottom: 30 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 'bold', color: '#333', marginBottom: 10 }}>
-            개인정보의 제3자 제공
-          </h2>
-          <div style={{ marginTop: 20, borderTop: '1px solid #000', borderBottom: '1px solid #000' }}>
-            <div style={{ display: 'flex', borderBottom: '1px solid #eee' }}>
-              <div style={{ padding: '10px 14px', minWidth: 150, background: '#f8f8f8', fontWeight: 'bold', borderRight: '1px solid #eee' }}>
-                1. 제공받는 곳
-              </div>
-              <div style={{ padding: '10px 14px', flex: 1 }}>
-                원티드랩 취업 협력 기관 및 채용 기업
-              </div>
-            </div>
-            <div style={{ display: 'flex', borderBottom: '1px solid #eee' }}>
-              <div style={{ padding: '10px 14px', minWidth: 150, background: '#f8f8f8', fontWeight: 'bold', borderRight: '1px solid #eee' }}>
-                2. 제공받는 자의 이용목적
-              </div>
-              <div style={{ padding: '10px 14px', flex: 1 }}>
-                수집 및 이용에 동의한 정보 중 위탁 업무 목적 달성에 필요한 정보에 한함
-              </div>
-            </div>
-            <div style={{ display: 'flex' }}>
-              <div style={{ padding: '10px 14px', minWidth: 150, background: '#f8f8f8', fontWeight: 'bold', borderRight: '1px solid #eee' }}>
-                3. 제공할 개인정보의 항목
-              </div>
-              <div style={{ padding: '10px 14px', flex: 1 }}>
-                수집된 개인정보
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 개인정보의 수집, 활용 및 제3자 제공에 따른 이용 기간 */}
-        <div style={{ marginBottom: 30 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 'bold', color: '#333', marginBottom: 10 }}>
-            개인정보의 수집, 활용 및 제3자 제공에 따른 이용 기간
-          </h2>
-          <p>
-            개인정보는 위 수집, 활용 및 제 3자 제공에 따른 이용 목적을 위하여 정보가 제공된 날로부터 정보가
-            제공된 날로부터 동의 철회 시 (최대 3년)까지 보유되며, 제공된 정보 이용을 철회하고
-            삭제를 요청할 수 있습니다.
-          </p>
-        </div>
-
         <p>
-          귀하는 위 사항에 대해 개인정보 수집 및 활용, 제3자 제공에 관하여 동의를 거부할 권리가 있으며, 동의를 거부할 경우
-          프로그램 참여에 제한이 있을 수 있음을 알려드립니다.
+          (주)원티드랩이 주관하는 포텐업 교육 과정 중 본인이 제작한 산출물(프로젝트 결과물, 발표자료,
+          포트폴리오 등)을 아래의 목적과 범위 내에서 활용하는 것에 동의합니다.
         </p>
 
-        <p style={{ marginTop: 20 }}>
-          「개인정보보호법」등 관련 법규에 따라 본인은 위와 같이 개인정보 수집 및 활용, 제3자에게 개인정보 제공에 동의합니다.
-        </p>        <section style={{ marginTop: 40 }}>
+        <div style={{ marginTop: 20, borderTop: '1px solid #000', borderBottom: '1px solid #000' }}>
+          <div style={{ display: 'flex', borderBottom: '1px solid #eee' }}>
+            <div style={{ padding: '10px 14px', minWidth: 150, background: '#f8f8f8', fontWeight: 'bold', borderRight: '1px solid #eee' }}>
+              1. 활용 목적
+            </div>
+            <div style={{ padding: '10px 14px', flex: 1 }}>
+              <ul style={{ listStyleType: 'disc', paddingLeft: 20 }}>
+                <li>교육 과정 성과 공유 및 보고</li>
+                <li>프로그램 운영 홍보</li>
+                <li>포텐업 훈련생들의 결과물 상호 공유</li>
+              </ul>
+            </div>
+          </div>
+          <div style={{ display: 'flex' }}>
+            <div style={{ padding: '10px 14px', minWidth: 150, background: '#f8f8f8', fontWeight: 'bold', borderRight: '1px solid #eee' }}>
+              2. 활용 범위
+            </div>
+            <div style={{ padding: '10px 14px', flex: 1 }}>
+              <p>형태: 이미지, 영상, 문서, 코드, 링크 등 산출물 원본 또는 편집본</p>
+              <p>매체: (주)원티드랩 공식 홈페이지, SNS, 뉴스레터, 보도자료 등</p>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ marginTop: 30, marginBottom: 30 }}>
+          <p style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+            <span style={{ fontSize: '1.2em', lineHeight: 1, color: '#555' }}>▶</span>
+            본인은 교육 중 제작한 산출물을 위와 같이 활용하는 것에 동의합니다.
+          </p>
+          <p style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+            <span style={{ fontSize: '1.2em', lineHeight: 1, color: '#555' }}>▶</span>
+            본인은 해당 산출물에 대한 일체의 권한(저작권, 수정 및 배포 권한 등)이 (주)원티드랩에 귀속됨에 동의합니다.
+          </p>
+          <p style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+            <span style={{ fontSize: '1.2em', lineHeight: 1, color: '#555' }}>▶</span>
+            본인은 산출물 활용 시 개인정보(이름, 소속 등)가 일부 포함될 수 있음에 동의합니다.
+          </p>
+        </div>        <section style={{ marginTop: 40 }}>
           {/* 입력 영역 */}
           <div style={{ marginTop: 40, border: '1px solid #eee', borderRadius: 8, padding: 24 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 40px' }}>

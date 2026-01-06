@@ -399,261 +399,258 @@ export default function PledgePage() {
 
         {/* 입력 영역 */}
         <section style={{ marginTop: 40 }}>
-          <div style={{ marginBottom: 20 }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ minWidth: 80, fontSize: 14 }}>서&nbsp;&nbsp;약&nbsp;&nbsp;일 :</span>
-              <input 
-                type="date" 
-                defaultValue="2025-12-21"
-                style={{ 
-                  padding: '10px 14px',
-                  border: '1px solid #ddd',
-                  borderRadius: 8,
-                  fontSize: 14,
-                  flex: 1,
-                }} 
-              />
-            </label>
-          </div>
+          {/* 입력 영역 */}
+          <div style={{ marginTop: 40, border: '1px solid #eee', borderRadius: 8, padding: 24 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 40px' }}>
+              {/* 서명일 */}
+              <label style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ minWidth: 80, fontSize: 14, fontWeight: 'bold' }}>서&nbsp;&nbsp;명&nbsp;&nbsp;일 :</span>
+                <input 
+                  type="date" 
+                  defaultValue="2025-12-21" // 기본값 설정 (필요에 따라 동적으로 변경 가능)
+                  style={{ 
+                    padding: '10px 14px',
+                    border: '1px solid #ddd',
+                    borderRadius: 8,
+                    fontSize: 14,
+                    flex: 1,
+                    minWidth: 150,
+                  }} 
+                />
+              </label>
 
-          {/* 교육명 아코디언 */}
-          <div style={{ marginBottom: 20, position: 'relative' }} data-course-dropdown>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ minWidth: 80, fontSize: 14 }}>교육명 :</span>
-              <div style={{ position: 'relative', flex: 1 }} data-course-dropdown>
-              <button
-                type="button"
-                onClick={() => setIsCourseOpen(!isCourseOpen)}
+              {/* 교육명 아코디언 */}
+              <div style={{ position: 'relative' }} data-course-dropdown>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{ minWidth: 80, fontSize: 14, fontWeight: 'bold' }}>교육명 :</span>
+                  <div style={{ position: 'relative', flex: 1 }} data-course-dropdown>
+                    <button
+                      type="button"
+                      onClick={() => setIsCourseOpen(!isCourseOpen)}
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        border: '1px solid #ddd',
+                        borderRadius: 8,
+                        background: '#fff',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        fontSize: 14,
+                        minWidth: 150,
+                      }}
+                    >
+                      <span>{course || '선택'}</span>
+                      <span style={{ transform: isCourseOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+                        ▲
+                      </span>
+                    </button>
+                    
+                    {isCourseOpen && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '100%',
+                          left: 0,
+                          right: 0,
+                          marginTop: 4,
+                          border: '1px solid #ddd',
+                          borderRadius: 8,
+                          background: '#fff',
+                          zIndex: 10,
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {courses.map((courseOption, index) => (
+                          <label
+                            key={courseOption}
+                            onClick={() => {
+                              setCourse(courseOption);
+                              setIsCourseOpen(false);
+                            }}
+                            style={{
+                              display: 'block',
+                              padding: '12px 16px',
+                              cursor: 'pointer',
+                              borderBottom: index < courses.length - 1 ? '1px solid #f0f0f0' : 'none',
+                              backgroundColor: course === courseOption ? '#e3f2fd' : '#fff',
+                              borderRadius: index === 0 ? '8px 8px 0 0' : index === courses.length - 1 ? '0 0 8px 8px' : '0',
+                            }}
+                            onMouseEnter={(e) => {
+                              if (course !== courseOption) {
+                                e.currentTarget.style.backgroundColor = '#f5f5f5';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (course !== courseOption) {
+                                e.currentTarget.style.backgroundColor = '#fff';
+                              }
+                            }}
+                          >
+                            <input
+                              type="radio"
+                              name="course"
+                              checked={course === courseOption}
+                              onChange={() => {
+                                setCourse(courseOption);
+                                setIsCourseOpen(false);
+                              }}
+                              style={{ marginRight: 8 }}
+                            />
+                            {courseOption}
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* 성명 입력 */}
+            <label style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 20 }}>
+              <span style={{ minWidth: 80, fontSize: 14, fontWeight: 'bold' }}>성&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;명 :</span>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="성명을 입력하세요"
                 style={{
                   width: '100%',
                   padding: '10px 14px',
                   border: '1px solid #ddd',
                   borderRadius: 8,
-                  background: '#fff',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
                   fontSize: 14,
+                  flex: 1,
                 }}
-              >
-                <span>{course || '선택'}</span>
-                <span style={{ transform: isCourseOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
-                  ▲
-                </span>
-              </button>
-              
-              {isCourseOpen && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: 0,
-                    right: 0,
-                    marginTop: 4,
-                    border: '1px solid #ddd',
-                    borderRadius: 8,
-                    background: '#fff',
-                    zIndex: 10,
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {courses.map((courseOption, index) => (
-                    <label
-                      key={courseOption}
-                      onClick={() => {
-                        setCourse(courseOption);
-                        setIsCourseOpen(false);
-                      }}
-                      style={{
-                        display: 'block',
-                        padding: '12px 16px',
-                        cursor: 'pointer',
-                        borderBottom: index < courses.length - 1 ? '1px solid #f0f0f0' : 'none',
-                        backgroundColor: course === courseOption ? '#e3f2fd' : '#fff',
-                        borderRadius: index === 0 ? '8px 8px 0 0' : index === courses.length - 1 ? '0 0 8px 8px' : '0',
-                      }}
-                      onMouseEnter={(e) => {
-                        if (course !== courseOption) {
-                          e.currentTarget.style.backgroundColor = '#f5f5f5';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (course !== courseOption) {
-                          e.currentTarget.style.backgroundColor = '#fff';
-                        }
-                      }}
-                    >
-                      <input
-                        type="radio"
-                        name="course"
-                        checked={course === courseOption}
-                        onChange={() => {
-                          setCourse(courseOption);
-                          setIsCourseOpen(false);
-                        }}
-                        style={{ marginRight: 8 }}
-                      />
-                      {courseOption}
-                    </label>
-                  ))}
+              />
+            </label>
+
+            {/* 정자서명란 */}
+            <div style={{ marginTop: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+                <span style={{ minWidth: 80, fontSize: 14, fontWeight: 'bold' }}>정자서명란 :</span>
+                <span style={{ fontSize: 14 }}>(인)</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ minWidth: 80, fontSize: 14 }}></span> {/* 정렬을 위한 빈 span */}
+                <div style={{ flex: 1, position: 'relative' }}>
+                  <canvas
+                    ref={canvasRef}
+                    style={{
+                      width: '100%',
+                      height: 140,
+                      border: '1px solid #000',
+                      borderRadius: 8,
+                      background: '#fff',
+                      cursor: 'crosshair',
+                      touchAction: 'none',
+                    }}
+                    onPointerDown={start}
+                    onPointerMove={move}
+                    onPointerUp={end}
+                    onPointerLeave={end}
+                    onTouchStart={start}
+                    onTouchMove={move}
+                    onTouchEnd={end}
+                  />
+                  <button
+                    ref={clearButtonRef}
+                    onClick={clear}
+                    style={{
+                      position: 'absolute',
+                      bottom: 8,
+                      right: 8,
+                      padding: '6px 10px',
+                      background: '#fff',
+                      border: '1px solid #ddd',
+                      borderRadius: 8,
+                      cursor: 'pointer',
+                      fontSize: 12,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 4,
+                    }}
+                  >
+                    🗑️ 지우기
+                  </button>
                 </div>
-              )}
               </div>
-            </label>
-          </div>
-
-          {/* 성명 입력 */}
-          <div style={{ marginBottom: 20 }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ minWidth: 80, fontSize: 14 }}>성&nbsp;&nbsp;명 :</span>
-              <div style={{ flex: 1 }}>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="성명을 입력하세요"
-                  style={{
-                    width: '100%',
-                    padding: '10px 14px',
-                    border: '1px solid #ddd',
-                    borderRadius: 8,
-                    fontSize: 14,
-                  }}
-                />
-              </div>
-            </label>
-          </div>
-
-          {/* 서명 패드 */}
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-              <span style={{ minWidth: 80, fontSize: 14 }}></span>
-              <span style={{ fontSize: 14 }}>(인)</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ minWidth: 80, fontSize: 14 }}></span>
-              <div style={{ flex: 1, position: 'relative' }}>
-                <canvas
-                  ref={canvasRef}
-                  style={{
-                    width: '100%',
-                    height: 140,
-                    border: '1px solid #000',
-                    borderRadius: 8,
-                    background: '#fff',
-                    cursor: 'crosshair',
-                    touchAction: 'none',
-                  }}
-                  onPointerDown={start}
-                  onPointerMove={move}
-                  onPointerUp={end}
-                  onPointerLeave={end}
-                  onTouchStart={start}
-                  onTouchMove={move}
-                  onTouchEnd={end}
-                />
-                <button
-                  ref={clearButtonRef}
-                  onClick={clear}
-                  style={{
-                    position: 'absolute',
-                    bottom: 8,
-                    right: 8,
-                    padding: '6px 10px',
-                    background: '#fff',
-                    border: '1px solid #ddd',
-                    borderRadius: 8,
-                    cursor: 'pointer',
-                    fontSize: 12,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 4,
-                  }}
-                >
-                  🗑️ 지우기
-                </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
+                <span style={{ minWidth: 80, fontSize: 14 }}></span> {/* 정렬을 위한 빈 span */}
+                <p style={{ fontSize: 12, color: '#555', flex: 1 }}>
+                  ※ 마우스 또는 터치로 정자 서명해주세요.
+                </p>
               </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
-              <span style={{ minWidth: 80, fontSize: 14 }}></span>
-              <p style={{ fontSize: 12, color: '#555', flex: 1 }}>
-                ※ 마우스 또는 터치로 정자 서명해주세요.
-              </p>
-            </div>
-          </div>
 
-          {/* 주소 입력 */}
-          <div style={{ marginBottom: 20 }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ minWidth: 80, fontSize: 14 }}>주&nbsp;&nbsp;소 :</span>
-              <div style={{ flex: 1 }}>
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="주소를 입력하세요"
-                  style={{
-                    width: '100%',
-                    padding: '10px 14px',
-                    border: '1px solid #ddd',
-                    borderRadius: 8,
-                    fontSize: 14,
-                  }}
-                />
-              </div>
+            {/* 주소 입력 */}
+            <label style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 20 }}>
+              <span style={{ minWidth: 80, fontSize: 14, fontWeight: 'bold' }}>주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;소 :</span>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="주소를 입력하세요"
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  border: '1px solid #ddd',
+                  borderRadius: 8,
+                  fontSize: 14,
+                  flex: 1,
+                }}
+              />
             </label>
-          </div>
 
-          {/* 연락처 입력 */}
-          <div style={{ marginBottom: 20 }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ minWidth: 80, fontSize: 14 }}>연&nbsp;&nbsp;락&nbsp;&nbsp;처 :</span>
-              <div style={{ flex: 1 }}>
-                <input
-                  type="tel"
-                  value={contact}
-                  onChange={(e) => {
-                    const formatted = formatPhoneNumber(e.target.value);
-                    setContact(formatted);
-                    if (formatted.length > 0) {
-                      setIsContactFocused(true);
-                    }
-                  }}
-                  onFocus={() => {
-                    if (!isContactFocused && contact === '010-0000-0000') {
-                      setContact('');
-                      setIsContactFocused(true);
-                    }
-                  }}
-                  onBlur={() => {
-                    if (contact.trim() === '' || contact === '010-0000-0000') {
+            {/* 연락처 입력 */}
+            <label style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 20 }}>
+              <span style={{ minWidth: 80, fontSize: 14, fontWeight: 'bold' }}>연&nbsp;&nbsp;락&nbsp;&nbsp;처 :</span>
+              <input
+                type="tel"
+                value={contact}
+                onChange={(e) => {
+                  const formatted = formatPhoneNumber(e.target.value);
+                  setContact(formatted);
+                  if (formatted.length > 0) {
+                    setIsContactFocused(true);
+                  }
+                }}
+                onFocus={() => {
+                  if (!isContactFocused && contact === '010-0000-0000') {
+                    setContact('');
+                    setIsContactFocused(true);
+                  }
+                }}
+                onBlur={() => {
+                  if (contact.trim() === '' || contact === '010-0000-0000') {
+                    setContact('010-0000-0000');
+                    setIsContactFocused(false);
+                  } else {
+                    // 포맷이 완전하지 않으면 다시 포맷팅
+                    const formatted = formatPhoneNumber(contact);
+                    if (formatted.length < 13) {
                       setContact('010-0000-0000');
                       setIsContactFocused(false);
                     } else {
-                      // 포맷이 완전하지 않으면 다시 포맷팅
-                      const formatted = formatPhoneNumber(contact);
-                      if (formatted.length < 13) {
-                        setContact('010-0000-0000');
-                        setIsContactFocused(false);
-                      } else {
-                        setContact(formatted);
-                      }
+                      setContact(formatted);
                     }
-                  }}
-                  placeholder="010-0000-0000"
-                  maxLength={13}
-                  style={{
-                    width: '100%',
-                    padding: '10px 14px',
-                    border: '1px solid #ddd',
-                    borderRadius: 8,
-                    fontSize: 14,
-                  }}
-                />
-              </div>
+                  }
+                }}
+                placeholder="010-0000-0000"
+                maxLength={13}
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  border: '1px solid #ddd',
+                  borderRadius: 8,
+                  fontSize: 14,
+                  flex: 1,
+                }}
+              />
             </label>
           </div>
 
