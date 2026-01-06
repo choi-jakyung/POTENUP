@@ -120,14 +120,11 @@ export default function CodeOfConductPage() {
       agreed
     );
   };
-
   const courses = [
     'AI Agent & 언리얼 개발 협업과정',
     '게임 개발자 양성과정',
     'AI기반 FE & BE 협업과정',
   ];
-
-
   return (
     <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
       <article style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>
