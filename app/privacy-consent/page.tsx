@@ -107,16 +107,18 @@ export default function PrivacyConsentPage() {
     setHasSignature(false);
   };
 
-  const isFormValid =
-  course !== '' &&
-  name.trim() !== '' &&
-  address.trim() !== '' &&
-  contact.trim() !== '' &&
-  contact !== '010-0000-0000' &&
-  contact.length >= 13 &&
-  hasSignature &&
-  agreed;
-
+  const isFormValid = () => {
+    return (
+      course !== '' &&
+      name.trim() !== '' &&
+      address.trim() !== '' &&
+      contact.trim() !== '' &&
+      contact !== '010-0000-0000' &&
+      contact.length >= 13 &&
+      hasSignature &&
+      agreed
+    );
+  };
 
   return (
     <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
