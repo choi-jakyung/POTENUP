@@ -37,6 +37,7 @@ export default function EducationalOutputConsentPage() {
   const [agreed, setAgreed] = useState(false);
   const [hasSignature, setHasSignature] = useState(false);
   const [isContactFocused, setIsContactFocused] = useState(false);
+  const [isCourseOpen, setIsCourseOpen] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -423,7 +424,6 @@ export default function EducationalOutputConsentPage() {
                 }}
               />
             </label>
-          </div>
           </div>
           <div style={{ marginTop: 32, marginBottom: 24 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
