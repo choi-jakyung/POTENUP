@@ -99,26 +99,26 @@ export default function PrivacyConsentPage() {
     if (!hasSignature) setHasSignature(true);
   };
 
-  const end = () => { drawing.current = false; };
   const clear = () => {
-    const canvas = canvasRef.current!;
-    const ctx = canvas.getContext('2d')!;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    setHasSignature(false);
-  };
+  const canvas = canvasRef.current;
+  if (!canvas) return;
 
-  const isFormValid = () => {
-    return (
-      course !== '' &&
-      name.trim() !== '' &&
-      address.trim() !== '' &&
-      contact.trim() !== '' &&
-      contact !== '010-0000-0000' &&
-      contact.length >= 13 &&
-      hasSignature &&
-      agreed
-    );
-  };
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  setHasSignature(false);
+};
+
+  const isFormValid = () =>
+    course !== '' &&
+    name.trim() !== '' &&
+    address.trim() !== '' &&
+    contact.trim() !== '' &&
+    contact !== '010-0000-0000' &&
+    contact.length >= 13 &&
+    hasSignature &&
+    agreed;
 
   return (
     <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
