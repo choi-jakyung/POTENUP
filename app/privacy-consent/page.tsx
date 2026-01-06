@@ -108,7 +108,11 @@ export default function PrivacyConsentPage() {
   };
 
   const isFormValid = () => {
-    const isContactValid = contact.trim() !== '' && contact !== '010-0000-0000' && contact.length >= 13;
+    const isContactValid =
+    contact.trim() !== '' && 
+    contact !== '010-0000-0000' &&
+    contact.length >= 13;
+    
     return (
       course !== '' &&
       name.trim() !== '' &&
@@ -118,6 +122,7 @@ export default function PrivacyConsentPage() {
       agreed
     );
   };
+
   return (
     <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
       <article style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>
