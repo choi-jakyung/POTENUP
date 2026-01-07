@@ -30,6 +30,12 @@ export default function Home() {
       path: '/privacy-collection',
     },
     {
+      id: 'educational-output',
+      title: '📝 교육 산출물 활용 동의서',
+      description: '교육 중 제작한 산출물의 활용에 관한 동의',
+      path: '/educational-output',
+    },
+    {
       id: 'photo',
       title: '📷 사진촬영 및 초상권 활용 동의서',
       description: '사진촬영 및 초상권 활용에 관한 동의서',
