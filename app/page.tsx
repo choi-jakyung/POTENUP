@@ -36,6 +36,12 @@ export default function Home() {
       path: '/privacy-consent',
     },
     {
+      id: 'privacy-collection',
+      title: '🛡️ 개인정보 수집ㆍ이용ㆍ제공 동의서',
+      description: '포텐업 교육과정 개인정보 수집 및 활용 동의',
+      path: '/privacy-collection',
+    },
+    {
       id: 'photo',
       title: '📷 사진촬영 및 초상권 활용 동의서',
       description: '사진촬영 및 초상권 활용에 관한 동의서',
