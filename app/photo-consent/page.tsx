@@ -363,7 +363,6 @@ export default function PhotoConsentPage() {
             </label>
           </div>
 
-          </div>
           <div style={{ marginTop: 32, marginBottom: 24 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
               <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} style={{ width: 18, height: 18, cursor: 'pointer' }} />
