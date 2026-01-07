@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const courses = [
   'AI Agent & 언리얼 개발 협업과정',
@@ -122,7 +123,9 @@ export default function PhotoConsentPage() {
     <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
       <article style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>
         <div style={{ marginBottom: 16 }}>
-          <Image src="/wanted-logo.png" alt="wanted logo" width={96} height={96} style={{ objectFit: 'contain' }} unoptimized />
+          <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
+            <Image src="/wanted-logo.png" alt="wanted logo" width={96} height={96} style={{ objectFit: 'contain' }} unoptimized />
+          </Link>
         </div>
         <h1 style={{ fontSize: 24, fontWeight: 'bold', color: '#333', marginBottom: 40, textAlign: 'center' }}>
           사진 촬영 및 초상권 활용 동의서

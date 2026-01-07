@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from 'react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import Link from 'next/link';
 
 const courses = [
   'AI Agent & 언리얼 개발 협업과정',
@@ -320,20 +321,22 @@ export default function PledgePage() {
         
         {/* 헤더: 로고 */}
         <div style={{ marginBottom: 16 }}>
-          <div style={{ width: 96, height: 96, position: 'relative' }}>
-            <img
-              src="/wanted-logo.png"
-              alt="wanted logo"
-              width={96}
-              height={96}
-              style={{ objectFit: 'contain' }}
-              onError={(e) => {
-                // 이미지 로드 실패 시 숨김
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-              }}
-            />
-          </div>
+          <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
+            <div style={{ width: 96, height: 96, position: 'relative' }}>
+              <img
+                src="/wanted-logo.png"
+                alt="wanted logo"
+                width={96}
+                height={96}
+                style={{ objectFit: 'contain' }}
+                onError={(e) => {
+                  // 이미지 로드 실패 시 숨김
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
+              />
+            </div>
+          </Link>
         </div>
 
         {/* 제목 */}
