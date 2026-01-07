@@ -38,7 +38,30 @@ export default function Home() {
   ];
 
   return (
-    <main style={{ background: '#fff', minHeight: '100vh', padding: '48px 24px' }}>
+    <main style={{ background: '#fff', minHeight: '100vh', padding: '48px 24px', position: 'relative' }}>
+      {/* 오른쪽 상단 POTENUP 로고 */}
+      <div style={{ 
+        position: 'fixed', 
+        top: 24, 
+        right: 24, 
+        zIndex: 1000,
+        background: '#000',
+        padding: '12px 20px',
+        borderRadius: 8,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+      }}>
+        <Link href="/">
+          <Image
+            src="/potenup-logo.png"
+            alt="POTENUP logo"
+            width={150}
+            height={50}
+            style={{ objectFit: 'contain', display: 'block' }}
+            unoptimized
+          />
+        </Link>
+      </div>
+
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         {/* 헤더: 로고 */}
         <div style={{ marginBottom: 32, textAlign: 'center' }}>
