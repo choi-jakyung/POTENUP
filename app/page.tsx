@@ -12,10 +12,22 @@ export default function Home() {
       path: '/pledge',
     },
     {
+      id: 'asset-receipt',
+      title: '📦 자산 지급수령/반납확인서',
+      description: '자산 수령 및 반납에 관한 확인서',
+      path: '/asset-receipt',
+    },
+    {
       id: 'code-of-conduct',
       title: '📜 행동강령서약서',
       description: '교육생 행동강령 및 준수사항에 관한 서약서',
       path: '/code-of-conduct',
+    },
+    {
+      id: 'code-pledge',
+      title: '✍️ 행동 강령 서약서',
+      description: '교육 기간 중 준수해야 할 행동 강령 서약서',
+      path: '/code-pledge',
     },
     {
       id: 'privacy',
