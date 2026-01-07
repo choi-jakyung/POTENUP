@@ -121,10 +121,13 @@ export default function Home() {
             >
               <div style={{ marginBottom: 16 }}>
                 <h2 style={{ 
-                  fontSize: 20, 
+                  fontSize: 18, 
                   fontWeight: 600, 
                   marginBottom: 8,
-                  color: '#1976d2'
+                  color: '#1976d2',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
                 }}>
                   {pledge.title}
                 </h2>
