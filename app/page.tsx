@@ -50,6 +50,9 @@ export default function Home() {
             style={{ objectFit: 'contain', marginBottom: 24 }}
             unoptimized
           />
+          <p style={{ fontSize: 18, color: '#666', marginBottom: 24 }}>
+            어서오세요, 여기는 Wanted Potenup 입니다.
+          </p>
           <h1 style={{ fontSize: 32, fontWeight: 'bold', color: '#333', marginBottom: 16 }}>
             포텐업 서약서
           </h1>
