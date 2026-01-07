@@ -18,12 +18,6 @@ export default function Home() {
       path: '/asset-receipt',
     },
     {
-      id: 'code-of-conduct',
-      title: '📜 행동강령서약서',
-      description: '교육생 행동강령 및 준수사항에 관한 서약서',
-      path: '/code-of-conduct',
-    },
-    {
       id: 'code-pledge',
       title: '✍️ 행동 강령 서약서',
       description: '교육 기간 중 준수해야 할 행동 강령 서약서',
