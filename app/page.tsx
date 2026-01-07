@@ -30,12 +30,6 @@ export default function Home() {
       path: '/code-pledge',
     },
     {
-      id: 'privacy',
-      title: '🔒 개인정보 수집/이용/제공 동의서',
-      description: '개인정보 처리에 관한 동의서',
-      path: '/privacy-consent',
-    },
-    {
       id: 'privacy-collection',
       title: '🛡️ 개인정보 수집ㆍ이용ㆍ제공 동의서',
       description: '포텐업 교육과정 개인정보 수집 및 활용 동의',
