@@ -19,6 +19,7 @@ export default function CodeOfConductPage() {
   const [agreed, setAgreed] = useState(false);
   const [hasSignature, setHasSignature] = useState(false);
   const [isContactFocused, setIsContactFocused] = useState(false);
+  const [isCourseOpen, setIsCourseOpen] = useState(false);
 
   // 연락처 포맷팅 함수 (010-0000-0000 형식)
   const formatPhoneNumber = (value: string) => {
