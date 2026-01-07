@@ -87,11 +87,13 @@ export default function Home() {
                 e.currentTarget.style.borderColor = '#1976d2';
                 e.currentTarget.style.boxShadow = '0 4px 12px rgba(25, 118, 210, 0.15)';
                 e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.background = '#f0f7ff';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = '#e0e0e0';
                 e.currentTarget.style.boxShadow = 'none';
                 e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.background = '#fff';
               }}
             >
               <div style={{ marginBottom: 16 }}>
