@@ -7,31 +7,31 @@ export default function Home() {
   const pledges = [
     {
       id: 'asset',
-      title: '자산관리서약서',
+      title: '💼 자산관리서약서',
       description: '교육기관 자산 관리 및 반납에 관한 서약서',
       path: '/pledge',
     },
     {
       id: 'code-of-conduct',
-      title: '행동강령서약서',
+      title: '📜 행동강령서약서',
       description: '교육생 행동강령 및 준수사항에 관한 서약서',
       path: '/code-of-conduct',
     },
     {
       id: 'privacy',
-      title: '개인정보 수집/이용/제공 동의서',
+      title: '🔒 개인정보 수집/이용/제공 동의서',
       description: '개인정보 처리에 관한 동의서',
       path: '/privacy-consent',
     },
     {
       id: 'photo',
-      title: '사진촬영 및 초상권 활용 동의서',
+      title: '📷 사진촬영 및 초상권 활용 동의서',
       description: '사진촬영 및 초상권 활용에 관한 동의서',
       path: '/photo-consent',
     },
     {
       id: 'project',
-      title: '프로젝트 추가 편성 계획 안내 및 동의서',
+      title: '📊 프로젝트 추가 편성 계획 안내 및 동의서',
       description: '프로젝트 추가 편성에 관한 안내 및 동의서',
       path: '/project-consent',
     },
@@ -52,7 +52,7 @@ export default function Home() {
       }}>
         <Link href="/">
           <Image
-            src="/potenup-logo.png"
+            src="/POTENUP B.png"
             alt="POTENUP logo"
             width={150}
             height={50}
