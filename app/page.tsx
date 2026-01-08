@@ -41,12 +41,6 @@ export default function Home() {
       description: '사진촬영 및 초상권 활용에 관한 동의서',
       path: '/photo-consent',
     },
-    {
-      id: 'project',
-      title: '📊 프로젝트 추가 편성 계획 안내 및 동의서',
-      description: '프로젝트 추가 편성에 관한 안내 및 동의서',
-      path: '/project-consent',
-    },
   ];
 
   return (
