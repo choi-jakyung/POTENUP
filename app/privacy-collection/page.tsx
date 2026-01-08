@@ -36,10 +36,9 @@ export default function PrivacyCollectionPage() {
   const [course, setCourse] = useState('');
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
-  const [contact, setContact] = useState('010-0000-0000');
+  const [contact, setContact] = useState('');
   const [consent, setConsent] = useState<'agree' | 'disagree' | ''>('');
   const [hasSignature, setHasSignature] = useState(false);
-  const [isContactFocused, setIsContactFocused] = useState(false);
   const [isCourseOpen, setIsCourseOpen] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
@@ -116,7 +115,7 @@ export default function PrivacyCollectionPage() {
   };
 
   const isFormValid = () => {
-    const isContactValid = contact.trim() !== '' && contact !== '010-0000-0000' && contact.length >= 13;
+    const isContactValid = contact.replace(/[^\d]/g, '').length === 11;
     return (
       signatureDate !== '' &&
       course !== '' &&
@@ -516,34 +515,9 @@ export default function PrivacyCollectionPage() {
               <span style={{ minWidth: 120, fontSize: 14, fontWeight: 'bold' }}>연&nbsp;&nbsp;락&nbsp;&nbsp;처 :</span>
               <input
                 type="tel"
+                inputMode="tel"
                 value={contact}
-                onChange={(e) => {
-                  const formatted = formatPhoneNumber(e.target.value);
-                  setContact(formatted);
-                  if (formatted.length > 0) {
-                    setIsContactFocused(true);
-                  }
-                }}
-                onFocus={() => {
-                  if (!isContactFocused && contact === '010-0000-0000') {
-                    setContact('');
-                    setIsContactFocused(true);
-                  }
-                }}
-                onBlur={() => {
-                  if (contact.trim() === '' || contact === '010-0000-0000') {
-                    setContact('010-0000-0000');
-                    setIsContactFocused(false);
-                  } else {
-                    const formatted = formatPhoneNumber(contact);
-                    if (formatted.length < 13) {
-                      setContact('010-0000-0000');
-                      setIsContactFocused(false);
-                    } else {
-                      setContact(formatted);
-                    }
-                  }
-                }}
+                onChange={(e) => setContact(formatPhoneNumber(e.target.value))}
                 placeholder="010-0000-0000"
                 maxLength={13}
                 style={{

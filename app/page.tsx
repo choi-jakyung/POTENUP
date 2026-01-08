@@ -44,8 +44,19 @@ export default function Home() {
   ];
 
   return (
-    <main style={{ background: '#fff', minHeight: '100vh', padding: '48px 24px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative' }}>
+    <main style={{ background: '#f5f5f5', minHeight: '100vh', padding: '48px 24px' }}>
+      <article
+        style={{
+          maxWidth: 794,
+          width: '100%',
+          margin: '0 auto',
+          position: 'relative',
+          background: '#fff',
+          padding: '40px 60px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          borderRadius: 12,
+        }}
+      >
         {/* 오른쪽 상단 POTENUP 로고 */}
         <div style={{ 
           position: 'absolute', 
@@ -204,7 +215,7 @@ export default function Home() {
             </a>
           </div>
         </footer>
-      </div>
+      </article>
     </main>
   );
 }

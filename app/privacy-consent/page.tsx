@@ -34,10 +34,9 @@ export default function PrivacyConsentPage() {
   const [course, setCourse] = useState('');
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
-  const [contact, setContact] = useState('010-0000-0000');
+  const [contact, setContact] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [hasSignature, setHasSignature] = useState(false);
-  const [isContactFocused, setIsContactFocused] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -111,15 +110,17 @@ export default function PrivacyConsentPage() {
   setHasSignature(false);
 };
 
-  const isFormValid = () =>
-    course !== '' &&
-    name.trim() !== '' &&
-    address.trim() !== '' &&
-    contact.trim() !== '' &&
-    contact !== '010-0000-0000' &&
-    contact.length >= 13 &&
-    hasSignature &&
-    agreed;
+  const isFormValid = () => {
+    const isContactValid = contact.replace(/[^\d]/g, '').length === 11;
+    return (
+      course !== '' &&
+      name.trim() !== '' &&
+      address.trim() !== '' &&
+      isContactValid &&
+      hasSignature &&
+      agreed
+    );
+  };
 
   return (
     <main style={{ background: '#f5f5f5', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
@@ -383,35 +384,9 @@ export default function PrivacyConsentPage() {
               <span style={{ minWidth: 80, fontSize: 14, fontWeight: 'bold' }}>연&nbsp;&nbsp;락&nbsp;&nbsp;처 :</span>
               <input
                 type="tel"
+                inputMode="tel"
                 value={contact}
-                onChange={(e) => {
-                  const formatted = formatPhoneNumber(e.target.value);
-                  setContact(formatted);
-                  if (formatted.length > 0) {
-                    setIsContactFocused(true);
-                  }
-                }}
-                onFocus={() => {
-                  if (!isContactFocused && contact === '010-0000-0000') {
-                    setContact('');
-                    setIsContactFocused(true);
-                  }
-                }}
-                onBlur={() => {
-                  if (contact.trim() === '' || contact === '010-0000-0000') {
-                    setContact('010-0000-0000');
-                    setIsContactFocused(false);
-                  } else {
-                    // 포맷이 완전하지 않으면 다시 포맷팅
-                    const formatted = formatPhoneNumber(contact);
-                    if (formatted.length < 13) {
-                      setContact('010-0000-0000');
-                      setIsContactFocused(false);
-                    } else {
-                      setContact(formatted);
-                    }
-                  }
-                }}
+                onChange={(e) => setContact(formatPhoneNumber(e.target.value))}
                 placeholder="010-0000-0000"
                 maxLength={13}
                 style={{
