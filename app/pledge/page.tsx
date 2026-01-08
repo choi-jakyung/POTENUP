@@ -172,27 +172,11 @@ export default function PledgePage() {
     }
   }, [isCourseOpen]);
 
-  // 연락처 포맷팅 함수 (010-0000-0000 형식)
-  const formatPhoneNumber = (value: string) => {
-    // 숫자만 추출
-    const numbers = value.replace(/[^\d]/g, '');
-    
-    // 11자리 초과 시 제한
-    const limitedNumbers = numbers.slice(0, 11);
-    
-    // 형식 적용
-    if (limitedNumbers.length <= 3) {
-      return limitedNumbers;
-    } else if (limitedNumbers.length <= 7) {
-      return `${limitedNumbers.slice(0, 3)}-${limitedNumbers.slice(3)}`;
-    } else {
-      return `${limitedNumbers.slice(0, 3)}-${limitedNumbers.slice(3, 7)}-${limitedNumbers.slice(7)}`;
-    }
-  };
+  const sanitizeContactInput = (value: string) => value.replace(/[^\d]/g, '').slice(0, 11);
 
   // 모든 필수 항목이 작성되었는지 확인
   const isFormValid = () => {
-    const isContactValid = contact.replace(/[^\d]/g, '').length === 11;
+    const isContactValid = contact.length === 11;
     return (
       course !== '' &&
       name.trim() !== '' &&
@@ -653,11 +637,12 @@ export default function PledgePage() {
               <span style={{ minWidth: 80, fontSize: 14, fontWeight: 'bold' }}>연&nbsp;&nbsp;락&nbsp;&nbsp;처 :</span>
               <input
                 type="tel"
-                inputMode="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={contact}
-                onChange={(e) => setContact(formatPhoneNumber(e.target.value))}
-                placeholder="010-0000-0000"
-                maxLength={13}
+                onChange={(e) => setContact(sanitizeContactInput(e.target.value))}
+                placeholder="01012345678"
+                maxLength={11}
                 style={{
                   width: '100%',
                   padding: '10px 14px',

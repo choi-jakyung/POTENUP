@@ -12,19 +12,7 @@ const courses = [
   'AI기반 FE & BE 협업과정'
 ];
 
-// 연락처 포맷팅 함수
-const formatPhoneNumber = (value: string) => {
-  const numbers = value.replace(/[^\d]/g, '');
-  const limitedNumbers = numbers.slice(0, 11);
-  
-  if (limitedNumbers.length <= 3) {
-    return limitedNumbers;
-  } else if (limitedNumbers.length <= 7) {
-    return `${limitedNumbers.slice(0, 3)}-${limitedNumbers.slice(3)}`;
-  } else {
-    return `${limitedNumbers.slice(0, 3)}-${limitedNumbers.slice(3, 7)}-${limitedNumbers.slice(7)}`;
-  }
-};
+const sanitizeContactInput = (value: string) => value.replace(/[^\d]/g, '').slice(0, 11);
 
 export default function CodePledgePage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -132,7 +120,7 @@ export default function CodePledgePage() {
   };
 
   const isFormValid = () => {
-    const isContactValid = contact.replace(/[^\d]/g, '').length === 11;
+    const isContactValid = contact.length === 11;
     return (
       pledgeDate !== '' &&
       course !== '' &&
@@ -482,11 +470,12 @@ export default function CodePledgePage() {
               <span style={{ minWidth: 120, fontSize: 14, fontWeight: 'bold' }}>연&nbsp;&nbsp;락&nbsp;&nbsp;처 :</span>
               <input
                 type="tel"
-                inputMode="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={contact}
-                onChange={(e) => setContact(formatPhoneNumber(e.target.value))}
-                placeholder="010-0000-0000"
-                maxLength={13}
+                onChange={(e) => setContact(sanitizeContactInput(e.target.value))}
+                placeholder="01012345678"
+                maxLength={11}
                 style={{
                   width: '100%',
                   padding: '10px 14px',
