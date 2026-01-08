@@ -500,6 +500,12 @@ export default function AssetReceiptPage() {
             확인서 제출하기
           </button>
         </div>
+
+        <footer style={{ marginTop: 60, paddingTop: 24, borderTop: '1px solid rgb(224, 224, 224)', textAlign: 'center' }}>
+          <p style={{ fontSize: 12, color: 'rgb(102, 102, 102)', margin: 0 }}>
+            © 2026 ㈜원티드랩. All rights reserved.
+          </p>
+        </footer>
       </article>
     </main>
   );
