@@ -241,16 +241,17 @@ export default function PledgePage() {
         article.clientWidth
       );
       
+      // A4 용지 크기에 맞춰 캔버스 생성 (210mm = 794px at 96 DPI)
+      const a4WidthPx = 794;
+      
       // html2canvas로 고해상도 캡처 (전체 내용 정확히 캡처)
       const canvas = await html2canvas(article, {
         useCORS: true,
         logging: false,
         backgroundColor: '#ffffff',
-        scale: 2, // 해상도 2배로 증가
-        width: articleScrollWidth,
-        height: articleScrollHeight + 20, // 여유 공간 추가
-        windowWidth: articleScrollWidth,
-        windowHeight: articleScrollHeight + 20,
+        scale: 3, // 고해상도를 위해 scale 증가
+        width: a4WidthPx,
+        windowWidth: a4WidthPx,
         allowTaint: true,
         scrollX: 0,
         scrollY: 0,
@@ -270,16 +271,15 @@ export default function PledgePage() {
         format: 'a4',
       });
 
-      const pdfWidth = 210; // A4 width in mm
-      const pdfHeight = 297; // A4 height in mm
-      const topMargin = 10; // 상단 여백 (mm)
-      const bottomMargin = 10; // 하단 여백 (mm)
-      const sideMargin = 15; // 좌우 여백 (mm)
+      // A4 용지 크기 (mm)
+      const pdfWidth = 210;
+      const pdfHeight = 297;
+      const margin = 0; // 여백 없이 전체 페이지 사용
 
       // 이미지 비율 계산
       const imgAspectRatio = canvas.width / canvas.height;
-      const availableWidth = pdfWidth - (sideMargin * 2); // 좌우 여백을 뺀 사용 가능한 너비
-      const availableHeightPerPage = pdfHeight - topMargin - bottomMargin; // 페이지당 사용 가능한 높이
+      const availableWidth = pdfWidth - (margin * 2);
+      const availableHeightPerPage = pdfHeight - (margin * 2);
       
       // 너비를 기준으로 이미지 크기 계산 (비율 유지)
       const imgWidth = availableWidth;
@@ -318,10 +318,10 @@ export default function PledgePage() {
             pdf.addImage(
               pageImgData,
               'PNG',
-              sideMargin,
-              topMargin,
+              margin,
+              margin,
               imgWidth,
-              pageImgHeight,
+              availableHeightPerPage,
               undefined,
               'FAST'
             );
@@ -329,11 +329,7 @@ export default function PledgePage() {
         }
       } else {
         // 한 페이지에 들어가는 경우
-        const x = sideMargin;
-        const y = topMargin;
-        
-        // 한 페이지에 이미지 추가 (좌우 여백이 정확히 동일하게)
-        pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight, undefined, 'FAST');
+        pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight, undefined, 'FAST');
       }
 
       // 파일명 생성 (성명_날짜 형식)
@@ -352,8 +348,17 @@ export default function PledgePage() {
   };
 
   return (
-    <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
-      <article ref={articleRef} style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>
+    <main style={{ background: '#f5f5f5', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
+      <article ref={articleRef} style={{ 
+        maxWidth: 794, 
+        width: '100%',
+        margin: '0 auto', 
+        fontSize: 14, 
+        lineHeight: 1.9,
+        background: '#fff',
+        padding: '40px 60px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      }}>
         
         {/* 헤더: 로고 */}
         <div style={{ marginBottom: 16 }}>

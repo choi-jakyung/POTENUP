@@ -137,22 +137,35 @@ export default function PrivacyCollectionPage() {
       const clearButton = clearButtonRef.current;
       const originalDisplay = clearButton?.style.display || '';
       if (clearButton) clearButton.style.display = 'none';
-      const articleScrollHeight = Math.max(article.scrollHeight, article.offsetHeight, article.clientHeight);
-      const articleScrollWidth = Math.max(article.scrollWidth, article.offsetWidth, article.clientWidth);
+      // A4 용지 크기에 맞춰 캔버스 생성 (210mm = 794px at 96 DPI)
+      const a4WidthPx = 794;
+      
       const canvas = await html2canvas(article, {
-        useCORS: true, logging: false, backgroundColor: '#ffffff', scale: 2,
-        width: articleScrollWidth, height: articleScrollHeight + 20,
-        windowWidth: articleScrollWidth, windowHeight: articleScrollHeight + 20,
-        allowTaint: true, scrollX: 0, scrollY: 0,
+        useCORS: true, 
+        logging: false, 
+        backgroundColor: '#ffffff', 
+        scale: 3, // 고해상도를 위해 scale 증가
+        width: a4WidthPx,
+        windowWidth: a4WidthPx,
+        allowTaint: true, 
+        scrollX: 0, 
+        scrollY: 0,
       } as any);
       if (clearButton) clearButton.style.display = originalDisplay || '';
       const imgData = canvas.toDataURL('image/png', 1.0);
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      const pdfWidth = 210, pdfHeight = 297, topMargin = 10, bottomMargin = 10, sideMargin = 15;
+      
+      // A4 용지 크기 (mm)
+      const pdfWidth = 210;
+      const pdfHeight = 297;
+      const margin = 0; // 여백 없이 전체 페이지 사용
+      
       const imgAspectRatio = canvas.width / canvas.height;
-      const availableWidth = pdfWidth - (sideMargin * 2);
-      const availableHeightPerPage = pdfHeight - topMargin - bottomMargin;
-      const imgWidth = availableWidth, imgHeight = availableWidth / imgAspectRatio;
+      const availableWidth = pdfWidth - (margin * 2);
+      const availableHeightPerPage = pdfHeight - (margin * 2);
+      const imgWidth = availableWidth;
+      const imgHeight = availableWidth / imgAspectRatio;
+      
       if (imgHeight > availableHeightPerPage) {
         const totalPages = Math.ceil(imgHeight / availableHeightPerPage);
         for (let page = 0; page < totalPages; page++) {
@@ -160,16 +173,17 @@ export default function PrivacyCollectionPage() {
           const sourceY = (canvas.height / totalPages) * page;
           const sourceHeight = canvas.height / totalPages;
           const pageCanvas = document.createElement('canvas');
-          pageCanvas.width = canvas.width; pageCanvas.height = sourceHeight;
+          pageCanvas.width = canvas.width; 
+          pageCanvas.height = sourceHeight;
           const pageCtx = pageCanvas.getContext('2d');
           if (pageCtx) {
             pageCtx.drawImage(canvas, 0, sourceY, canvas.width, sourceHeight, 0, 0, canvas.width, sourceHeight);
             const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
-            pdf.addImage(pageImgData, 'PNG', sideMargin, topMargin, imgWidth, availableHeightPerPage, undefined, 'FAST');
+            pdf.addImage(pageImgData, 'PNG', margin, margin, imgWidth, availableHeightPerPage, undefined, 'FAST');
           }
         }
       } else {
-        pdf.addImage(imgData, 'PNG', sideMargin, topMargin, imgWidth, imgHeight, undefined, 'FAST');
+        pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight, undefined, 'FAST');
       }
       const date = new Date().toISOString().split('T')[0];
       pdf.save(`${name}_개인정보수집이용제공동의서_${date}.pdf`);
@@ -182,8 +196,17 @@ export default function PrivacyCollectionPage() {
   };
 
   return (
-    <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
-      <article ref={articleRef} style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>
+    <main style={{ background: '#f5f5f5', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
+      <article ref={articleRef} style={{ 
+        maxWidth: 794, 
+        width: '100%',
+        margin: '0 auto', 
+        fontSize: 14, 
+        lineHeight: 1.9,
+        background: '#fff',
+        padding: '40px 60px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      }}>
         <div style={{ marginBottom: 16 }}>
           <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
             <Image src="/wanted-logo.png" alt="wanted logo" width={96} height={96} style={{ objectFit: 'contain' }} unoptimized />

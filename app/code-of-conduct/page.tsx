@@ -127,8 +127,17 @@ export default function CodeOfConductPage() {
       agreed
     );
   };  return (
-    <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
-      <article style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>
+    <main style={{ background: '#f5f5f5', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
+      <article style={{ 
+        maxWidth: 794, 
+        width: '100%',
+        margin: '0 auto', 
+        fontSize: 14, 
+        lineHeight: 1.9,
+        background: '#fff',
+        padding: '40px 60px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      }}>
         <div style={{ marginBottom: 16 }}>
           <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
             <Image

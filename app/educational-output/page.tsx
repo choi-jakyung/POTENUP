@@ -142,18 +142,16 @@ export default function EducationalOutputPage() {
         clearButton.style.display = 'none';
       }
 
-      const articleScrollHeight = Math.max(article.scrollHeight, article.offsetHeight, article.clientHeight);
-      const articleScrollWidth = Math.max(article.scrollWidth, article.offsetWidth, article.clientWidth);
+      // A4 용지 크기에 맞춰 캔버스 생성 (210mm = 794px at 96 DPI)
+      const a4WidthPx = 794;
       
       const canvas = await html2canvas(article, {
         useCORS: true,
         logging: false,
         backgroundColor: '#ffffff',
-        scale: 2,
-        width: articleScrollWidth,
-        height: articleScrollHeight + 20,
-        windowWidth: articleScrollWidth,
-        windowHeight: articleScrollHeight + 20,
+        scale: 3, // 고해상도를 위해 scale 증가
+        width: a4WidthPx,
+        windowWidth: a4WidthPx,
         allowTaint: true,
         scrollX: 0,
         scrollY: 0,
@@ -171,15 +169,14 @@ export default function EducationalOutputPage() {
         format: 'a4',
       });
 
+      // A4 용지 크기 (mm)
       const pdfWidth = 210;
       const pdfHeight = 297;
-      const topMargin = 10;
-      const bottomMargin = 10;
-      const sideMargin = 15;
+      const margin = 0; // 여백 없이 전체 페이지 사용
 
       const imgAspectRatio = canvas.width / canvas.height;
-      const availableWidth = pdfWidth - (sideMargin * 2);
-      const availableHeightPerPage = pdfHeight - topMargin - bottomMargin;
+      const availableWidth = pdfWidth - (margin * 2);
+      const availableHeightPerPage = pdfHeight - (margin * 2);
       
       const imgWidth = availableWidth;
       const imgHeight = availableWidth / imgAspectRatio;
@@ -203,14 +200,11 @@ export default function EducationalOutputPage() {
           if (pageCtx) {
             pageCtx.drawImage(canvas, 0, sourceY, canvas.width, sourceHeight, 0, 0, canvas.width, sourceHeight);
             const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
-            const pageImgHeight = availableHeightPerPage;
-            pdf.addImage(pageImgData, 'PNG', sideMargin, topMargin, imgWidth, pageImgHeight, undefined, 'FAST');
+            pdf.addImage(pageImgData, 'PNG', margin, margin, imgWidth, availableHeightPerPage, undefined, 'FAST');
           }
         }
       } else {
-        const x = sideMargin;
-        const y = topMargin;
-        pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight, undefined, 'FAST');
+        pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight, undefined, 'FAST');
       }
 
       const date = new Date().toISOString().split('T')[0];
@@ -226,8 +220,17 @@ export default function EducationalOutputPage() {
   };
 
   return (
-    <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
-      <article ref={articleRef} style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>
+    <main style={{ background: '#f5f5f5', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
+      <article ref={articleRef} style={{ 
+        maxWidth: 794, 
+        width: '100%',
+        margin: '0 auto', 
+        fontSize: 14, 
+        lineHeight: 1.9,
+        background: '#fff',
+        padding: '40px 60px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      }}>
         <div style={{ marginBottom: 16 }}>
           <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
             <Image src="/wanted-logo.png" alt="wanted logo" width={96} height={96} style={{ objectFit: 'contain' }} unoptimized />

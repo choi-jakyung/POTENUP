@@ -3,6 +3,9 @@
 import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import Link from 'next/link';
 
 const courses = [
   'AI Agent & 언리얼 개발 협업과정',
@@ -31,6 +34,8 @@ const formatPhoneNumber = (value: string) => {
 export default function EducationalOutputConsentPage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const drawing = useRef(false);
+  const articleRef = useRef<HTMLElement | null>(null);
+  const clearButtonRef = useRef<HTMLButtonElement | null>(null);
   const [course, setCourse] = useState('');
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
@@ -39,6 +44,7 @@ export default function EducationalOutputConsentPage() {
   const [hasSignature, setHasSignature] = useState(false);
   const [isContactFocused, setIsContactFocused] = useState(false);
   const [isCourseOpen, setIsCourseOpen] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -121,8 +127,17 @@ export default function EducationalOutputConsentPage() {
     );
   };
   return (
-    <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
-      <article style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>
+    <main style={{ background: '#f5f5f5', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
+      <article style={{ 
+        maxWidth: 794, 
+        width: '100%',
+        margin: '0 auto', 
+        fontSize: 14, 
+        lineHeight: 1.9,
+        background: '#fff',
+        padding: '40px 60px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      }}>
         <div style={{ marginBottom: 16 }}>
           <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
             <Image src="/wanted-logo.png" alt="wanted logo" width={96} height={96} style={{ objectFit: 'contain' }} unoptimized />
