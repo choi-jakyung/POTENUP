@@ -727,7 +727,7 @@ export default function PledgePage() {
                 transition: 'all 0.2s',
               }}
             >
-              {isGeneratingPDF ? 'PDF 생성 중...' : '서약서를 PDF로 저장하기'}
+              {isGeneratingPDF ? 'PDF 생성 중...' : '서약서 저장하기'}
             </button>
           </div>
         </section>
