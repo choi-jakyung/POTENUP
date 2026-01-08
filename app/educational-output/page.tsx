@@ -3,6 +3,8 @@
 import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const courses = [
   'AI Agent & 언리얼 개발 협업과정',
@@ -27,6 +29,8 @@ const formatPhoneNumber = (value: string) => {
 export default function EducationalOutputPage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const drawing = useRef(false);
+  const articleRef = useRef<HTMLElement | null>(null);
+  const clearButtonRef = useRef<HTMLButtonElement | null>(null);
   
   const [signatureDate, setSignatureDate] = useState(new Date().toISOString().split('T')[0]);
   const [course, setCourse] = useState('');
@@ -37,6 +41,7 @@ export default function EducationalOutputPage() {
   const [hasSignature, setHasSignature] = useState(false);
   const [isContactFocused, setIsContactFocused] = useState(false);
   const [isCourseOpen, setIsCourseOpen] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -123,9 +128,106 @@ export default function EducationalOutputPage() {
     );
   };
 
+  const generatePDF = async () => {
+    if (!isFormValid() || isGeneratingPDF) return;
+
+    try {
+      setIsGeneratingPDF(true);
+      const article = articleRef.current;
+      if (!article) return;
+
+      const clearButton = clearButtonRef.current;
+      const originalDisplay = clearButton?.style.display || '';
+      if (clearButton) {
+        clearButton.style.display = 'none';
+      }
+
+      const articleScrollHeight = Math.max(article.scrollHeight, article.offsetHeight, article.clientHeight);
+      const articleScrollWidth = Math.max(article.scrollWidth, article.offsetWidth, article.clientWidth);
+      
+      const canvas = await html2canvas(article, {
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        scale: 2,
+        width: articleScrollWidth,
+        height: articleScrollHeight + 20,
+        windowWidth: articleScrollWidth,
+        windowHeight: articleScrollHeight + 20,
+        allowTaint: true,
+        scrollX: 0,
+        scrollY: 0,
+      } as any);
+
+      if (clearButton) {
+        clearButton.style.display = originalDisplay || '';
+      }
+
+      const imgData = canvas.toDataURL('image/png', 1.0);
+      
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const pdfWidth = 210;
+      const pdfHeight = 297;
+      const topMargin = 10;
+      const bottomMargin = 10;
+      const sideMargin = 15;
+
+      const imgAspectRatio = canvas.width / canvas.height;
+      const availableWidth = pdfWidth - (sideMargin * 2);
+      const availableHeightPerPage = pdfHeight - topMargin - bottomMargin;
+      
+      const imgWidth = availableWidth;
+      const imgHeight = availableWidth / imgAspectRatio;
+      
+      if (imgHeight > availableHeightPerPage) {
+        const totalPages = Math.ceil(imgHeight / availableHeightPerPage);
+        
+        for (let page = 0; page < totalPages; page++) {
+          if (page > 0) {
+            pdf.addPage();
+          }
+          
+          const sourceY = (canvas.height / totalPages) * page;
+          const sourceHeight = canvas.height / totalPages;
+          
+          const pageCanvas = document.createElement('canvas');
+          pageCanvas.width = canvas.width;
+          pageCanvas.height = sourceHeight;
+          const pageCtx = pageCanvas.getContext('2d');
+          
+          if (pageCtx) {
+            pageCtx.drawImage(canvas, 0, sourceY, canvas.width, sourceHeight, 0, 0, canvas.width, sourceHeight);
+            const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
+            const pageImgHeight = availableHeightPerPage;
+            pdf.addImage(pageImgData, 'PNG', sideMargin, topMargin, imgWidth, pageImgHeight, undefined, 'FAST');
+          }
+        }
+      } else {
+        const x = sideMargin;
+        const y = topMargin;
+        pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight, undefined, 'FAST');
+      }
+
+      const date = new Date().toISOString().split('T')[0];
+      const fileName = `${name}_교육산출물활용동의서_${date}.pdf`;
+      pdf.save(fileName);
+      
+    } catch (error) {
+      console.error('PDF 생성 오류:', error);
+      alert('PDF 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
   return (
     <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
-      <article style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>
+      <article ref={articleRef} style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>
         <div style={{ marginBottom: 16 }}>
           <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
             <Image src="/wanted-logo.png" alt="wanted logo" width={96} height={96} style={{ objectFit: 'contain' }} unoptimized />
@@ -377,6 +479,7 @@ export default function EducationalOutputPage() {
                     onTouchEnd={end}
                   />
                   <button
+                    ref={clearButtonRef}
                     onClick={clear}
                     style={{
                       position: 'absolute',
@@ -474,8 +577,8 @@ export default function EducationalOutputPage() {
           <div style={{ marginTop: 32, textAlign: 'center' }}>
             <button
               type="button"
-              onClick={() => { if (isFormValid()) alert('동의서가 제출되었습니다.'); }}
-              disabled={!isFormValid()}
+              onClick={generatePDF}
+              disabled={!isFormValid() || isGeneratingPDF}
               style={{
                 width: '100%',
                 maxWidth: 400,
@@ -484,12 +587,12 @@ export default function EducationalOutputPage() {
                 fontWeight: 600,
                 border: 'none',
                 borderRadius: 12,
-                cursor: isFormValid() ? 'pointer' : 'not-allowed',
-                background: isFormValid() ? '#1976d2' : '#ccc',
-                color: isFormValid() ? '#fff' : '#999'
+                cursor: isFormValid() && !isGeneratingPDF ? 'pointer' : 'not-allowed',
+                background: isFormValid() && !isGeneratingPDF ? '#1976d2' : '#ccc',
+                color: isFormValid() && !isGeneratingPDF ? '#fff' : '#999'
               }}
             >
-              동의서 제출하기
+              {isGeneratingPDF ? 'PDF 생성 중...' : '동의서 제출하기'}
             </button>
           </div>
         </section>
