@@ -31,6 +31,7 @@ export default function CodePledgePage() {
   const drawing = useRef(false);
   const articleRef = useRef<HTMLElement | null>(null);
   const clearButtonRef = useRef<HTMLButtonElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   
   const [pledgeDate, setPledgeDate] = useState(new Date().toISOString().split('T')[0]);
   const [course, setCourse] = useState('');
@@ -65,6 +66,22 @@ export default function CodePledgePage() {
     window.addEventListener('resize', setCanvasSize);
     return () => window.removeEventListener('resize', setCanvasSize);
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsCourseOpen(false);
+      }
+    };
+
+    if (isCourseOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isCourseOpen]);
 
   const getCanvasCoordinates = (e: React.PointerEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -255,10 +272,14 @@ export default function CodePledgePage() {
             <div style={{ position: 'relative', marginBottom: 20 }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <span style={{ minWidth: 120, fontSize: 14, fontWeight: 'bold' }}>교&nbsp;&nbsp;육&nbsp;&nbsp;명 :</span>
-                <div style={{ position: 'relative', flex: 1 }}>
+                <div ref={dropdownRef} style={{ position: 'relative', flex: 1 }}>
                   <button
                     type="button"
-                    onClick={() => setIsCourseOpen(!isCourseOpen)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsCourseOpen(!isCourseOpen);
+                    }}
                     style={{
                       width: '100%',
                       padding: '10px 14px',
@@ -270,12 +291,13 @@ export default function CodePledgePage() {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      fontSize: 14
+                      fontSize: 14,
+                      minWidth: 150
                     }}
                   >
                     <span>{course || '선택'}</span>
                     <span style={{ transform: isCourseOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
-                      ▲
+                      ▼
                     </span>
                   </button>
                   
@@ -294,9 +316,11 @@ export default function CodePledgePage() {
                       overflow: 'hidden'
                     }}>
                       {courses.map((courseOption, index) => (
-                        <label
+                        <div
                           key={courseOption}
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             setCourse(courseOption);
                             setIsCourseOpen(false);
                           }}
@@ -305,7 +329,8 @@ export default function CodePledgePage() {
                             padding: '12px 16px',
                             cursor: 'pointer',
                             borderBottom: index < courses.length - 1 ? '1px solid #f0f0f0' : 'none',
-                            backgroundColor: course === courseOption ? '#e3f2fd' : '#fff'
+                            backgroundColor: course === courseOption ? '#e3f2fd' : '#fff',
+                            transition: 'background-color 0.2s'
                           }}
                           onMouseEnter={(e) => {
                             if (course !== courseOption) {
@@ -318,18 +343,8 @@ export default function CodePledgePage() {
                             }
                           }}
                         >
-                          <input
-                            type="radio"
-                            name="course"
-                            checked={course === courseOption}
-                            onChange={() => {
-                              setCourse(courseOption);
-                              setIsCourseOpen(false);
-                            }}
-                            style={{ marginRight: 8 }}
-                          />
                           {courseOption}
-                        </label>
+                        </div>
                       ))}
                     </div>
                   )}
