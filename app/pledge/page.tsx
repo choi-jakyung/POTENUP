@@ -272,33 +272,69 @@ export default function PledgePage() {
 
       const pdfWidth = 210; // A4 width in mm
       const pdfHeight = 297; // A4 height in mm
-      const topMargin = 10; // 로고 위 여백 (mm)
+      const topMargin = 10; // 상단 여백 (mm)
+      const bottomMargin = 10; // 하단 여백 (mm)
       const sideMargin = 15; // 좌우 여백 (mm)
 
       // 이미지 비율 계산
       const imgAspectRatio = canvas.width / canvas.height;
-      const availableHeight = pdfHeight - topMargin; // 여백을 뺀 사용 가능한 높이
       const availableWidth = pdfWidth - (sideMargin * 2); // 좌우 여백을 뺀 사용 가능한 너비
+      const availableHeightPerPage = pdfHeight - topMargin - bottomMargin; // 페이지당 사용 가능한 높이
       
-      // 좌우 여백을 정확히 동일하게 맞추기 위해 너비를 고정
-      const imgWidth = availableWidth; // 좌우 여백을 뺀 너비 사용 (항상 고정)
-      let imgHeight = availableWidth / imgAspectRatio; // 비율에 맞춰 높이 계산
+      // 너비를 기준으로 이미지 크기 계산 (비율 유지)
+      const imgWidth = availableWidth;
+      const imgHeight = availableWidth / imgAspectRatio;
       
-      // 높이가 사용 가능한 높이를 초과하면 높이만 조정 (너비는 고정 유지)
-      if (imgHeight > availableHeight) {
-        imgHeight = availableHeight;
-        // 너비는 availableWidth로 고정하여 좌우 여백이 항상 동일하게 유지
+      // 여러 페이지로 나눠야 하는 경우
+      if (imgHeight > availableHeightPerPage) {
+        // 페이지 수 계산
+        const totalPages = Math.ceil(imgHeight / availableHeightPerPage);
+        
+        for (let page = 0; page < totalPages; page++) {
+          if (page > 0) {
+            pdf.addPage();
+          }
+          
+          // 현재 페이지에서 보여줄 이미지의 시작 위치 (원본 이미지 기준)
+          const sourceY = (canvas.height / totalPages) * page;
+          const sourceHeight = canvas.height / totalPages;
+          
+          // 임시 캔버스에 현재 페이지 부분만 추출
+          const pageCanvas = document.createElement('canvas');
+          pageCanvas.width = canvas.width;
+          pageCanvas.height = sourceHeight;
+          const pageCtx = pageCanvas.getContext('2d');
+          
+          if (pageCtx) {
+            pageCtx.drawImage(
+              canvas,
+              0, sourceY, canvas.width, sourceHeight,
+              0, 0, canvas.width, sourceHeight
+            );
+            
+            const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
+            const pageImgHeight = availableHeightPerPage;
+            
+            pdf.addImage(
+              pageImgData,
+              'PNG',
+              sideMargin,
+              topMargin,
+              imgWidth,
+              pageImgHeight,
+              undefined,
+              'FAST'
+            );
+          }
+        }
+      } else {
+        // 한 페이지에 들어가는 경우
+        const x = sideMargin;
+        const y = topMargin;
+        
+        // 한 페이지에 이미지 추가 (좌우 여백이 정확히 동일하게)
+        pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight, undefined, 'FAST');
       }
-
-      // 좌우 여백이 정확히 동일하도록 위치 설정
-      const x = sideMargin; // 왼쪽 여백 = sideMargin
-      const y = topMargin; // 로고 위 여백
-      
-      // 검증: 오른쪽 여백 = pdfWidth - x - imgWidth = pdfWidth - sideMargin - availableWidth
-      // = pdfWidth - sideMargin - (pdfWidth - sideMargin * 2) = sideMargin (동일함)
-
-      // 한 페이지에 이미지 추가 (좌우 여백이 정확히 동일하게)
-      pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
 
       // 파일명 생성 (성명_날짜 형식)
       const date = new Date().toISOString().split('T')[0];
