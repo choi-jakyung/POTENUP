@@ -57,17 +57,46 @@ export default function Home() {
           borderRadius: 12,
         }}
       >
+        {/* 왼쪽 상단 로고 */}
+        <div style={{ 
+          position: 'absolute',
+          top: 16,
+          left: 16,
+          zIndex: 10
+        }}>
+          <Link href="/">
+            <Image
+              src="/wanted-logo.png"
+              alt="wanted logo"
+              width={150}
+              height={48.42}
+              style={{ objectFit: 'contain', display: 'block' }}
+              unoptimized
+            />
+          </Link>
+        </div>
 
-        {/* 헤더: 로고 */}
-        <div style={{ marginBottom: 32, textAlign: 'center' }}>
-          <Image
-            src="/wanted-logo.png"
-            alt="wanted logo"
-            width={150}
-            height={48.42}
-            style={{ objectFit: 'contain', marginBottom: 24 }}
-            unoptimized
-          />
+        {/* 오른쪽 상단 로고 */}
+        <div style={{ 
+          position: 'absolute',
+          top: 16,
+          right: 16,
+          zIndex: 10
+        }}>
+          <Link href="/">
+            <Image
+              src="/potenup.png"
+              alt="potenup logo"
+              width={150}
+              height={48.42}
+              style={{ objectFit: 'contain', display: 'block' }}
+              unoptimized
+            />
+          </Link>
+        </div>
+
+        {/* 헤더 */}
+        <div style={{ marginBottom: 32, textAlign: 'center', marginTop: 80 }}>
           <p style={{ fontSize: 18, color: '#666', marginBottom: 24 }}>
             어서오세요, 여기는 Wanted Potenup 입니다.
           </p>
@@ -203,12 +232,30 @@ export default function Home() {
           article {
             padding: 24px 20px !important;
           }
+
+          article div[style*="position: absolute"][style*="top: 16"] {
+            top: 12px !important;
+          }
+
+          article div[style*="position: absolute"][style*="left: 16"] {
+            left: 12px !important;
+          }
+
+          article div[style*="position: absolute"][style*="right: 16"] {
+            right: 12px !important;
+          }
+
+          article div[style*="position: absolute"] img {
+            width: 100px !important;
+            height: 32.28px !important;
+          }
           
           article div[style*="marginBottom: 32"] {
             margin-bottom: 24px !important;
+            margin-top: 60px !important;
           }
           
-          article img {
+          article div[style*="marginBottom: 32"] img {
             width: 120px !important;
             height: 38.74px !important;
           }
