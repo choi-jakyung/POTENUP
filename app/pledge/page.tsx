@@ -484,19 +484,19 @@ export default function PledgePage() {
         </p>
 
         <div style={{ marginTop: 12, marginBottom: 12 }}>
-          <p style={{ margin: '4.5px 0', fontSize: 12, lineHeight: 1.8 }}>1. ㈜원티드랩(이하 '교육기관')으로부터 지급된 모든 물품은 교육기관의 자산임을 인식하고 이를 철저히 관리하는 것에 동의합니다.</p>
+          <p style={{ margin: '4.5px 0', fontSize: 12, lineHeight: 1.8 }}>1. ㈜원티드랩(이하 &apos;교육기관&apos;)으로부터 지급된 모든 물품은 교육기관의 자산임을 인식하고 이를 철저히 관리하는 것에 동의합니다.</p>
           <p style={{ margin: '4.5px 0', fontSize: 12, lineHeight: 1.8 }}>2. 전항의 자산은 타인에게 대여할 수 없으며, 본인이 교육 수강 용도로만 사용하는 것에 동의합니다.</p>
           <p style={{ margin: '4.5px 0', fontSize: 12, lineHeight: 1.8 }}>3. 1항의 자산에 인가되지 않은 불법 소프트웨어 설치 또는 사용으로 인한 자산 훼손 등 및/또는 제3자의 지적재산권 침해 등으로 인한 민/형사상 책임은 본인이 부담하며, 그에 따라 교육 수강 제한됨에 동의합니다.</p>
-          <p style={{ margin: '4.5px 0', fontSize: 12, lineHeight: 1.8 }}>4. 1항의 자산에 관한 내역 [첨부1. 자산수령/반납확인서]을 모두 확인하였으며, 아래 "원티드랩 내부 자산 손∙망실 처리 규정" 일부를 준수하는 것에 동의합니다.</p>
+          <p style={{ margin: '4.5px 0', fontSize: 12, lineHeight: 1.8 }}>4. 1항의 자산에 관한 내역 [첨부1. 자산수령/반납확인서]을 모두 확인하였으며, 아래 &quot;원티드랩 내부 자산 손∙망실 처리 규정&quot; 일부를 준수하는 것에 동의합니다.</p>
           <p style={{ margin: '4.5px 0', fontSize: 12, lineHeight: 1.8 }}>
             5. 1항의 자산은 교육 종료 즉시 교육기관에 전부 반납하는 것에 동의합니다.
             <br />
-            <span style={{ paddingLeft: 20 }}>※ 미 반납품은 [내부 자산 손∙망실 처리규정] "망실" 적용</span>
+            <span style={{ paddingLeft: 20 }}>※ 미 반납품은 [내부 자산 손∙망실 처리규정] &quot;망실&quot; 적용</span>
           </p>
           <p style={{ margin: '4.5px 0', fontSize: 12, lineHeight: 1.8 }}>
             6. 1항의 자산에 임의로 USIM칩 및 부착물(스티커 포함) 등은 부착하지 않겠습니다.
             <br />
-            <span style={{ paddingLeft: 20 }}>※ 부착물로 인한 자산 손상 시 "내부 자산 손∙망실 처리 규정"이 적용될 수 있습니다.</span>
+            <span style={{ paddingLeft: 20 }}>※ 부착물로 인한 자산 손상 시 &quot;내부 자산 손∙망실 처리 규정&quot;이 적용될 수 있습니다.</span>
           </p>
         </div>
 
