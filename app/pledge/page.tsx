@@ -924,6 +924,46 @@ export default function PledgePage() {
             margin: 6.75px 0 !important;
             line-height: 1.8 !important;
           }
+
+          /* 모바일 반응형 스타일 */
+          @media (max-width: 768px) {
+            main {
+              padding: 24px 16px !important;
+            }
+            
+            #pledge-article {
+              padding: 16px 20px !important;
+              min-height: auto !important;
+            }
+            
+            #pledge-article h1 {
+              font-size: 24px !important;
+              margin-top: 48px !important;
+            }
+            
+            #pledge-article p {
+              font-size: 14px !important;
+            }
+            
+            #pledge-article div[style*="gridTemplateColumns"] {
+              grid-template-columns: 1fr !important;
+              gap: 16px !important;
+            }
+            
+            #pledge-article input,
+            #pledge-article button,
+            #pledge-article select {
+              font-size: 16px !important;
+            }
+            
+            #pledge-article canvas {
+              height: 120px !important;
+            }
+            
+            #pledge-article table {
+              font-size: 12px !important;
+            }
+          }
         `}</style>
 
         {/* 푸터 */}

@@ -778,6 +778,57 @@ export default function PrivacyCollectionPage() {
               display: none !important;
             }
           }
+
+          /* 모바일 반응형 스타일 */
+          @media (max-width: 768px) {
+            main {
+              padding: 24px 16px !important;
+            }
+            
+            article {
+              padding: 16px 20px !important;
+            }
+            
+            article h1 {
+              font-size: 24px !important;
+              margin-top: 48px !important;
+            }
+            
+            article h2 {
+              font-size: 18px !important;
+            }
+            
+            article h3 {
+              font-size: 16px !important;
+            }
+            
+            article p {
+              font-size: 14px !important;
+            }
+            
+            article section {
+              padding: 16px !important;
+            }
+            
+            article ul li {
+              font-size: 14px !important;
+            }
+            
+            article div[style*="gridTemplateColumns"] {
+              grid-template-columns: 1fr !important;
+              gap: 16px !important;
+            }
+            
+            article input,
+            article button,
+            article select {
+              font-size: 16px !important;
+            }
+            
+            article canvas {
+              height: 120px !important;
+            }
+          }
         `}</style>
       </article>
     </main>

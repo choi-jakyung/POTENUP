@@ -194,6 +194,71 @@ export default function Home() {
           </div>
         </footer>
       </article>
+      <style jsx global>{`
+        @media (max-width: 768px) {
+          main {
+            padding: 24px 16px !important;
+          }
+          
+          article {
+            padding: 24px 20px !important;
+          }
+          
+          article div[style*="marginBottom: 32"] {
+            margin-bottom: 24px !important;
+          }
+          
+          article img {
+            width: 120px !important;
+            height: 38.74px !important;
+          }
+          
+          article p[style*="fontSize: 18"] {
+            font-size: 16px !important;
+          }
+          
+          article h1[style*="fontSize: 32"] {
+            font-size: 24px !important;
+            margin-bottom: 12px !important;
+          }
+          
+          article p[style*="fontSize: 16"] {
+            font-size: 14px !important;
+          }
+          
+          article div[style*="gridTemplateColumns"] {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+            margin-top: 32px !important;
+          }
+          
+          article a[href] {
+            padding: 24px 20px !important;
+          }
+          
+          article h2[style*="fontSize: 18"] {
+            font-size: 16px !important;
+            white-space: normal !important;
+          }
+          
+          article p[style*="fontSize: 14"] {
+            font-size: 13px !important;
+          }
+          
+          footer {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            margin-top: 48px !important;
+            padding-top: 24px !important;
+            gap: 12px !important;
+          }
+          
+          footer div[style*="display: flex"] {
+            flex-wrap: wrap !important;
+            gap: 12px !important;
+          }
+        }
+      `}</style>
     </main>
   );
 }
