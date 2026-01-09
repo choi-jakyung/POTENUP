@@ -453,7 +453,7 @@ export default function PledgePage() {
         {/* 헤더: 로고 */}
         <div style={{ marginBottom: -60 }}>
           <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
-            <div style={{ width: 150, height: 150, position: 'relative' }}>
+            <div style={{ width: 150, height: 48.42, position: 'relative' }}>
             <img
               src="/wanted-logo.png"
               alt="wanted logo"

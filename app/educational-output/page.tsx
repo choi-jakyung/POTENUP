@@ -267,7 +267,7 @@ export default function EducationalOutputPage() {
       }}>
         <div style={{ marginBottom: -60 }}>
           <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
-            <div style={{ width: 150, height: 150, position: 'relative' }}>
+            <div style={{ width: 150, height: 48.42, position: 'relative' }}>
               <img
                 src="/wanted-logo.png"
                 alt="wanted logo"
