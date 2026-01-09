@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import Link from 'next/link';
 
 const courses = [
   'AI Agent & 언리얼 개발 협업과정',
