@@ -31,6 +31,7 @@ export default function PrivacyCollectionPage() {
   const [hasSignature, setHasSignature] = useState(false);
   const [isCourseOpen, setIsCourseOpen] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [signaturePreviewUrl, setSignaturePreviewUrl] = useState('');
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -112,13 +113,25 @@ export default function PrivacyCollectionPage() {
     if (!hasSignature) setHasSignature(true);
   };
 
-  const end = () => { drawing.current = false; };
+  const end = () => {
+    drawing.current = false;
+    try {
+      const canvas = canvasRef.current;
+      if (canvas) {
+        const url = canvas.toDataURL('image/png');
+        setSignaturePreviewUrl(url);
+      }
+    } catch {
+      // ignore
+    }
+  };
   
   const clear = () => {
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext('2d')!;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     setHasSignature(false);
+    setSignaturePreviewUrl('');
   };
 
   const isFormValid = () => {
@@ -138,44 +151,81 @@ export default function PrivacyCollectionPage() {
     if (!isFormValid() || isGeneratingPDF) return;
     try {
       setIsGeneratingPDF(true);
+      
+      // 드롭다운 닫기
+      setIsCourseOpen(false);
+      await new Promise(r => setTimeout(r, 50));
+
       const article = articleRef.current;
       if (!article) return;
+
+      // PDF/프린트에 불필요한 UI 숨김
+      const hideTargets = Array.from(article.querySelectorAll<HTMLElement>('[data-hide-in-print]'));
+      const originalDisplays = hideTargets.map((el) => el.style.display);
+      hideTargets.forEach((el) => {
+        el.style.display = 'none';
+      });
+
+      // 지우기 버튼 숨김
       const clearButton = clearButtonRef.current;
       const originalDisplay = clearButton?.style.display || '';
       if (clearButton) clearButton.style.display = 'none';
-      const articleScrollHeight = Math.max(article.scrollHeight, article.offsetHeight, article.clientHeight);
-      const articleScrollWidth = Math.max(article.scrollWidth, article.offsetWidth, article.clientWidth);
+
+      // PDF 출력 모드 활성화
+      article.setAttribute('data-output-mode', '1');
+
+      // PDF 생성을 위한 대기 (레이아웃 안정화)
+      await new Promise(r => setTimeout(r, 300));
+
+      const a4WidthPx = 794; // 210mm @ 96dpi
       const canvas = await html2canvas(article, {
-        useCORS: true, logging: false, backgroundColor: '#ffffff', scale: 2,
-        width: articleScrollWidth, height: articleScrollHeight + 20,
-        windowWidth: articleScrollWidth, windowHeight: articleScrollHeight + 20,
-        allowTaint: true, scrollX: 0, scrollY: 0,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        scale: 3,
+        width: a4WidthPx,
+        windowWidth: a4WidthPx,
+        allowTaint: true,
+        scrollX: 0,
+        scrollY: 0,
       } as any);
+
+      // 숨김 복원
+      hideTargets.forEach((el, idx) => {
+        el.style.display = originalDisplays[idx] || '';
+      });
       if (clearButton) clearButton.style.display = originalDisplay || '';
+      
+      // PDF 출력 모드 해제
+      article.removeAttribute('data-output-mode');
+
       const imgData = canvas.toDataURL('image/png', 1.0);
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      const pdfWidth = 210, pdfHeight = 297, topMargin = 10, bottomMargin = 10, sideMargin = 15;
+      const pdfWidth = 210;
+      const pdfHeight = 297;
       const imgAspectRatio = canvas.width / canvas.height;
-      const availableWidth = pdfWidth - (sideMargin * 2);
-      const availableHeightPerPage = pdfHeight - topMargin - bottomMargin;
-      const imgWidth = availableWidth, imgHeight = availableWidth / imgAspectRatio;
-      if (imgHeight > availableHeightPerPage) {
-        const totalPages = Math.ceil(imgHeight / availableHeightPerPage);
+      const imgWidth = pdfWidth;
+      const imgHeight = imgWidth / imgAspectRatio;
+
+      if (imgHeight > pdfHeight) {
+        // 여러 페이지로 분할
+        const totalPages = Math.ceil(imgHeight / pdfHeight);
         for (let page = 0; page < totalPages; page++) {
           if (page > 0) pdf.addPage();
           const sourceY = (canvas.height / totalPages) * page;
           const sourceHeight = canvas.height / totalPages;
           const pageCanvas = document.createElement('canvas');
-          pageCanvas.width = canvas.width; pageCanvas.height = sourceHeight;
+          pageCanvas.width = canvas.width;
+          pageCanvas.height = sourceHeight;
           const pageCtx = pageCanvas.getContext('2d');
           if (pageCtx) {
             pageCtx.drawImage(canvas, 0, sourceY, canvas.width, sourceHeight, 0, 0, canvas.width, sourceHeight);
             const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
-            pdf.addImage(pageImgData, 'PNG', sideMargin, topMargin, imgWidth, availableHeightPerPage, undefined, 'FAST');
+            pdf.addImage(pageImgData, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
           }
         }
       } else {
-        pdf.addImage(imgData, 'PNG', sideMargin, topMargin, imgWidth, imgHeight, undefined, 'FAST');
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight, undefined, 'FAST');
       }
       const date = new Date().toISOString().split('T')[0];
       pdf.save(`${name}_개인정보수집이용제공동의서_${date}.pdf`);
@@ -188,15 +238,36 @@ export default function PrivacyCollectionPage() {
   };
 
   return (
-    <main style={{ background: '#fff', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
-      <article ref={articleRef} style={{ maxWidth: 860, margin: '0 auto', fontSize: 14, lineHeight: 1.9 }}>
-        <div style={{ marginBottom: 16 }}>
+    <main style={{ background: '#f5f5f5', color: '#000', minHeight: '100vh', padding: '120px 24px 48px 24px' }}>
+      <article
+        ref={articleRef}
+        style={{
+          maxWidth: 794,
+          width: '100%',
+          margin: '0 auto',
+          fontSize: 12,
+          lineHeight: 1.5,
+          background: '#fff',
+          padding: '16px 32px',
+          boxSizing: 'border-box',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        }}
+      >
+        <div style={{ marginBottom: -60 }}>
           <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
-            <Image src="/wanted-logo.png" alt="wanted logo" width={96} height={96} style={{ objectFit: 'contain' }} unoptimized />
+            <div style={{ width: 150, height: 150, position: 'relative' }}>
+              <img
+                src="/wanted-logo.png"
+                alt="wanted logo"
+                width={150}
+                height={150}
+                style={{ objectFit: 'contain', width: '100%', height: '100%' }}
+              />
+            </div>
           </Link>
         </div>
 
-        <h1 style={{ fontSize: 24, fontWeight: 'bold', color: '#333', marginBottom: 40, textAlign: 'center' }}>
+        <h1 style={{ fontSize: 30, fontWeight: 'bold', color: '#333', marginTop: 0, marginBottom: 16, textAlign: 'center' }}>
           개인정보 수집ㆍ이용ㆍ제공 동의서
         </h1>
 
@@ -282,7 +353,7 @@ export default function PrivacyCollectionPage() {
         </section>
 
         {/* 동의 확인 */}
-        <section style={{ marginTop: 40, marginBottom: 40, padding: 24, border: '2px solid #1976d2', borderRadius: 12, background: '#fff' }}>
+        <section data-hide-in-print style={{ marginTop: 40, marginBottom: 40, padding: 24, border: '2px solid #1976d2', borderRadius: 12, background: '#fff' }}>
           <p style={{ marginBottom: 20, fontSize: 15, fontWeight: 600, textAlign: 'center' }}>
             「개인정보보호법」 등 관련 법규에 따라 본인은 위와 같이 개인정보 수집 및 활용, 제3자에게 개인정보 제공에 동의함
           </p>
@@ -314,8 +385,51 @@ export default function PrivacyCollectionPage() {
           </div>
         </section>
 
+        {/* PDF 출력용 요약 블록 */}
+        <section data-summary-block style={{ marginTop: 30 }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+            <tbody>
+              <tr>
+                <td style={{ padding: '4px 8px', fontWeight: 'bold', width: '15%' }}>서명일</td>
+                <td style={{ padding: '4px 8px', width: '35%' }}>{signatureDate || '-'}</td>
+                <td style={{ padding: '4px 8px', fontWeight: 'bold', width: '15%' }}>교육명</td>
+                <td style={{ padding: '4px 8px', width: '35%' }}>{course || '-'}</td>
+              </tr>
+              <tr>
+                <td style={{ padding: '4px 8px', fontWeight: 'bold' }}>이름</td>
+                <td style={{ padding: '4px 8px', position: 'relative' }}>
+                  <div style={{ display: 'inline-block', position: 'relative' }}>
+                    {name.trim() || '-'}
+                    {signaturePreviewUrl && (
+                      <img
+                        src={signaturePreviewUrl}
+                        alt="서명"
+                        style={{ 
+                          position: 'absolute', 
+                          top: '50%', 
+                          left: '100%', 
+                          transform: 'translate(-80%, -50%)',
+                          height: 40,
+                          opacity: 0.9,
+                          pointerEvents: 'none'
+                        }}
+                      />
+                    )}
+                  </div>
+                </td>
+                <td style={{ padding: '4px 8px', fontWeight: 'bold' }}>연락처</td>
+                <td style={{ padding: '4px 8px' }}>{contact || '-'}</td>
+              </tr>
+              <tr>
+                <td style={{ padding: '4px 8px', fontWeight: 'bold' }}>주소</td>
+                <td colSpan={3} style={{ padding: '4px 8px' }}>{address || '-'}</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
         {/* 입력 폼 */}
-        <section style={{ marginTop: 50 }}>
+        <section data-form-block style={{ marginTop: 50 }}>
           <div style={{ marginTop: 40, border: '1px solid #eee', borderRadius: 8, padding: 24 }}>
             {(() => {
               const grid2: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 32 };
@@ -498,7 +612,7 @@ export default function PrivacyCollectionPage() {
             })()}
           </div>
 
-          <div style={{ marginTop: 32, textAlign: 'center' }}>
+          <div data-hide-in-print style={{ marginTop: 32, textAlign: 'center' }}>
             <button
               type="button"
               onClick={generatePDF}
@@ -520,6 +634,151 @@ export default function PrivacyCollectionPage() {
             </button>
           </div>
         </section>
+
+        <footer style={{ marginTop: 8, marginBottom: 0, paddingTop: 4, paddingBottom: 0, borderTop: '1px solid rgb(224, 224, 224)', textAlign: 'center' }}>
+          <p style={{ fontSize: 10, color: 'rgb(102, 102, 102)', margin: 0 }}>
+            © 2026 ㈜원티드랩. All rights reserved.
+          </p>
+        </footer>
+
+        <style jsx global>{`
+          /* 화면 기본: 요약 숨김 */
+          article [data-summary-block] {
+            display: none;
+          }
+
+          /* PDF 저장 시: 입력 폼 숨김 + 요약 표시 */
+          article[data-output-mode='1'] [data-form-block] {
+            display: none !important;
+          }
+          article[data-output-mode='1'] [data-summary-block] {
+            display: block !important;
+          }
+          article[data-output-mode='1'] [data-hide-in-print] {
+            display: none !important;
+          }
+
+          /* PDF 저장 시: 1페이지 압축 + 폰트 통일 */
+          article[data-output-mode='1'] {
+            padding: 8px 32px !important;
+            font-size: 15px !important;
+            line-height: 1.4 !important;
+          }
+
+          article[data-output-mode='1'] h1 {
+            font-size: 30px !important;
+            margin-top: 0 !important;
+            margin-bottom: 6px !important;
+          }
+
+          article[data-output-mode='1'] h2 {
+            font-size: 15px !important;
+            margin-top: 8px !important;
+            margin-bottom: 4px !important;
+          }
+
+          article[data-output-mode='1'] h3 {
+            font-size: 15px !important;
+            margin-top: 5px !important;
+            margin-bottom: 3px !important;
+          }
+
+          article[data-output-mode='1'] h4 {
+            font-size: 15px !important;
+            margin-top: 4px !important;
+            margin-bottom: 3px !important;
+          }
+
+          article[data-output-mode='1'] p {
+            margin: 3px 0 !important;
+            line-height: 1.4 !important;
+            font-size: 15px !important;
+          }
+
+          article[data-output-mode='1'] section {
+            margin-top: 8px !important;
+            margin-bottom: 8px !important;
+            padding: 8px !important;
+          }
+
+          article[data-output-mode='1'] ul {
+            margin: 3px 0 !important;
+            padding-left: 18px !important;
+          }
+
+          article[data-output-mode='1'] li {
+            margin: 2px 0 !important;
+            font-size: 15px !important;
+            line-height: 1.4 !important;
+          }
+
+          /* PDF 출력 시 로고 크기 고정 */
+          article[data-output-mode='1'] > div:first-child {
+            margin-bottom: 0px !important;
+          }
+
+          article[data-output-mode='1'] > div:first-child > a > div {
+            width: 120px !important;
+            height: 38.74px !important;
+          }
+
+          article[data-output-mode='1'] > div:first-child > a > div img {
+            width: 120px !important;
+            height: 38.74px !important;
+            object-fit: contain !important;
+          }
+
+          article[data-output-mode='1'] h1 {
+            margin-top: 30px !important;
+          }
+
+          article[data-output-mode='1'] footer {
+            margin-top: 4px !important;
+            padding-top: 2px !important;
+          }
+
+          article[data-output-mode='1'] footer p {
+            font-size: 15px !important;
+          }
+
+          article[data-output-mode='1'] input,
+          article[data-output-mode='1'] button,
+          article[data-output-mode='1'] label {
+            font-size: 15px !important;
+          }
+
+          article[data-output-mode='1'] table {
+            font-size: 15px !important;
+          }
+
+          article[data-output-mode='1'] table td {
+            padding: 4px 6px !important;
+          }
+
+          @media print {
+            body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+
+            main {
+              padding: 0 !important;
+              background: #fff !important;
+              min-height: auto !important;
+            }
+
+            article {
+              padding: 5mm 8mm !important;
+              box-shadow: none !important;
+              font-size: 8px !important;
+              line-height: 1.3 !important;
+            }
+
+            article [data-hide-in-print] {
+              display: none !important;
+            }
+          }
+        `}</style>
       </article>
     </main>
   );

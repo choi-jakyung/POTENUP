@@ -35,6 +35,8 @@ export default function AssetReceiptPage() {
   const [hasReturnSignature, setHasReturnSignature] = useState(false);
   const [isCourseOpen, setIsCourseOpen] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [receiptSignaturePreviewUrl, setReceiptSignaturePreviewUrl] = useState('');
+  const [returnSignaturePreviewUrl, setReturnSignaturePreviewUrl] = useState('');
   
   const [assets, setAssets] = useState<AssetItem[]>([
     { id: 1, assetCode: '', itemName: '', quantity: '', returnDate: '' },
@@ -203,6 +205,19 @@ export default function AssetReceiptPage() {
 
   const endDrawing = (drawingRef: React.MutableRefObject<boolean>) => {
     drawingRef.current = false;
+    try {
+      const canvas = drawingRef === receiptDrawing ? receiptCanvasRef.current : returnCanvasRef.current;
+      if (canvas) {
+        const url = canvas.toDataURL('image/png');
+        if (drawingRef === receiptDrawing) {
+          setReceiptSignaturePreviewUrl(url);
+        } else {
+          setReturnSignaturePreviewUrl(url);
+        }
+      }
+    } catch {
+      // ignore
+    }
   };
 
   const clearCanvas = (
@@ -215,6 +230,11 @@ export default function AssetReceiptPage() {
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     setHasSignature(false);
+    if (canvasRef === receiptCanvasRef) {
+      setReceiptSignaturePreviewUrl('');
+    } else {
+      setReturnSignaturePreviewUrl('');
+    }
   };
 
   const updateAsset = (id: number, field: keyof AssetItem, value: string) => {
@@ -254,6 +274,10 @@ export default function AssetReceiptPage() {
         el.style.display = 'none';
       });
 
+      // 출력(PDF)용: 입력 폼 숨기고 요약 블록 표시
+      article.setAttribute('data-output-mode', '1');
+      await new Promise((r) => setTimeout(r, 200));
+
       const a4WidthPx = 794; // 210mm @ 96dpi
       const canvas = await html2canvas(article, {
         useCORS: true,
@@ -271,6 +295,9 @@ export default function AssetReceiptPage() {
       hideTargets.forEach((el, idx) => {
         el.style.display = originalDisplays[idx] || '';
       });
+
+      // 출력 모드 해제
+      article.removeAttribute('data-output-mode');
 
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
       const imgAspectRatio = canvas.width / canvas.height;
@@ -322,24 +349,27 @@ export default function AssetReceiptPage() {
   };
 
   return (
-    <main style={{ background: '#f5f5f5', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
+    <main style={{ background: '#f5f5f5', color: '#000', minHeight: '100vh', padding: '80px 24px 48px 24px' }}>
       <article ref={articleRef} style={{ 
         maxWidth: 794, 
         width: '100%',
         margin: '0 auto', 
-        fontSize: 14, 
-        lineHeight: 1.9,
+        fontSize: 12, 
+        lineHeight: 1.5,
         background: '#fff',
-        padding: '40px 60px',
+        padding: '16px 32px',
+        boxSizing: 'border-box',
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
       }}>
-        <div style={{ marginBottom: 16 }}>
+        <div style={{ marginBottom: -60 }}>
           <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
-            <Image src="/wanted-logo.png" alt="wanted logo" width={96} height={96} style={{ objectFit: 'contain' }} unoptimized />
+            <div style={{ width: 150, height: 150, position: 'relative' }}>
+              <Image src="/wanted-logo.png" alt="wanted logo" width={150} height={150} style={{ objectFit: 'contain' }} unoptimized />
+            </div>
           </Link>
         </div>
         
-        <h1 style={{ fontSize: 24, fontWeight: 'bold', color: '#333', marginBottom: 16, textAlign: 'center' }}>
+        <h1 style={{ fontSize: 30, fontWeight: 'bold', color: '#333', marginTop: 0, marginBottom: 10, textAlign: 'center' }}>
           {docType === 'receipt' ? '자산지급 수령확인서' : '자산반납 확인서'}
         </h1>
 
@@ -373,7 +403,7 @@ export default function AssetReceiptPage() {
         <div style={tableWrapStyle}>
           <div style={tableOuterStyle}>
           <table style={tableStyle}>
-            <thead>
+            <thead data-form-block>
               <tr>
                 <th style={{ ...thStyle, minWidth: 50 }}>연번</th>
                 <th style={{ ...thStyle, minWidth: 120, textAlign: 'left', paddingLeft: 12 }}>자산코드</th>
@@ -382,7 +412,16 @@ export default function AssetReceiptPage() {
                 <th style={{ ...thStyle, minWidth: 120 }}>{docType === 'receipt' ? '수령일자' : '반납일자'}</th>
               </tr>
             </thead>
-            <tbody>
+            <thead data-summary-block>
+              <tr>
+                <th style={{ ...thStyle, width: '8%' }}>연번</th>
+                <th style={{ ...thStyle, width: '20%', textAlign: 'left', paddingLeft: 12 }}>자산코드</th>
+                <th style={{ ...thStyle, width: '35%', textAlign: 'left', paddingLeft: 12 }}>품명</th>
+                <th style={{ ...thStyle, width: '12%' }}>수량</th>
+                <th style={{ ...thStyle, width: '25%' }}>{docType === 'receipt' ? '수령일자' : '반납일자'}</th>
+              </tr>
+            </thead>
+            <tbody data-form-block>
               {assets.map((asset, index) => (
                 <tr key={asset.id} style={{ background: index % 2 === 0 ? '#fff' : '#fcfcfd' }}>
                   <td style={{ ...tdStyle, textAlign: 'center', width: 60 }}>{index + 1}</td>
@@ -431,6 +470,26 @@ export default function AssetReceiptPage() {
                 </tr>
               ))}
             </tbody>
+            <tbody data-summary-block>
+              {assets
+                .map((asset, index) => ({ ...asset, originalIndex: index }))
+                .filter(asset => 
+                  (asset.assetCode && asset.assetCode.trim()) || 
+                  (asset.itemName && asset.itemName.trim()) || 
+                  (asset.quantity && asset.quantity.trim()) || 
+                  (asset.returnDate && asset.returnDate.trim())
+                )
+                .map((asset, filteredIndex) => (
+                  <tr key={asset.id} style={{ background: filteredIndex % 2 === 0 ? '#fff' : '#fcfcfd' }}>
+                    <td style={{ padding: '8px 10px', borderBottom: '1px solid #f3f4f6', background: '#fff', verticalAlign: 'middle', textAlign: 'center', width: '8%', fontSize: 12 }}>{asset.originalIndex + 1}</td>
+                    <td style={{ padding: '8px 10px', borderBottom: '1px solid #f3f4f6', background: '#fff', verticalAlign: 'middle', textAlign: 'left', paddingLeft: 12, width: '20%', fontSize: 12 }}>{asset.assetCode}</td>
+                    <td style={{ padding: '8px 10px', borderBottom: '1px solid #f3f4f6', background: '#fff', verticalAlign: 'middle', textAlign: 'left', paddingLeft: 12, width: '35%', fontSize: 12 }}>{asset.itemName}</td>
+                    <td style={{ padding: '8px 10px', borderBottom: '1px solid #f3f4f6', background: '#fff', verticalAlign: 'middle', textAlign: 'center', width: '12%', fontSize: 12 }}>{asset.quantity}</td>
+                    <td style={{ padding: '8px 10px', borderBottom: '1px solid #f3f4f6', background: '#fff', verticalAlign: 'middle', textAlign: 'center', width: '25%', fontSize: 12 }}>{asset.returnDate}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
           </table>
           </div>
         </div>
@@ -438,35 +497,72 @@ export default function AssetReceiptPage() {
         {/* 자산 수령 시 */}
         {docType === 'receipt' && (
         <section style={{ marginTop: 40, marginBottom: 40 }}>
-          <p style={{ marginBottom: 20, textAlign: 'center' }}>
+          <p style={{ marginBottom: 48, textAlign: 'center' }}>
             상기 자산코드 또는 자산명 및 수량을 이상없이 수령하였음을 확인합니다.
           </p>
           
-          {/* 상단 2열: 확인일 / 교육명 */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 32 }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>확인일:</label>
-              <input 
-                type="date" 
-                defaultValue={new Date().toISOString().split('T')[0]}
-                onClick={(e) => {
-                  e.currentTarget.showPicker?.();
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.showPicker?.();
-                }}
-                style={{ 
-                  width: '100%',
-                  padding: '10px 14px',
-                  border: '1px solid #ddd',
-                  borderRadius: 8,
-                  fontSize: 14,
-                  cursor: 'pointer',
-                  WebkitAppearance: 'none',
-                  boxSizing: 'border-box'
-                }} 
-              />
-            </div>
+          {/* PDF 출력용 요약 블록 (표 형태) */}
+          <div data-summary-block style={{ marginTop: 48, border: '1px solid #eee', borderRadius: 8, padding: 12 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11, tableLayout: 'fixed' }}>
+              <tbody>
+                <tr style={{ display: 'table-row' }}>
+                  <td style={{ padding: '6px 4px', fontWeight: 'bold', width: '8%', whiteSpace: 'nowrap' }}>확인일</td>
+                  <td style={{ padding: '6px 4px', width: '15%', whiteSpace: 'nowrap' }}>{new Date().toISOString().split('T')[0]}</td>
+                  <td style={{ padding: '6px 4px', fontWeight: 'bold', width: '8%', whiteSpace: 'nowrap' }}>교육명</td>
+                  <td style={{ padding: '6px 4px', width: '38%', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{course || '-'}</td>
+                  <td style={{ padding: '6px 4px', fontWeight: 'bold', width: '8%', whiteSpace: 'nowrap' }}>성명</td>
+                  <td style={{ padding: '6px 4px', width: '23%', position: 'relative' }}>
+                    <div style={{ display: 'inline-block', position: 'relative' }}>
+                      {name.trim() || '-'}
+                      {receiptSignaturePreviewUrl && (
+                        <img
+                          src={receiptSignaturePreviewUrl}
+                          alt="서명"
+                          style={{ 
+                            position: 'absolute', 
+                            top: '50%', 
+                            left: '100%', 
+                            transform: 'translate(-80%, -50%)',
+                            height: 30,
+                            opacity: 0.9,
+                            pointerEvents: 'none'
+                          }}
+                        />
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          {/* 입력 폼 블록 */}
+          <div data-form-block>
+            {/* 상단 2열: 확인일 / 교육명 */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 32 }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>확인일:</label>
+                <input 
+                  type="date" 
+                  defaultValue={new Date().toISOString().split('T')[0]}
+                  onClick={(e) => {
+                    e.currentTarget.showPicker?.();
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.showPicker?.();
+                  }}
+                  style={{ 
+                    width: '100%',
+                    padding: '10px 14px',
+                    border: '1px solid #ddd',
+                    borderRadius: 8,
+                    fontSize: 14,
+                    cursor: 'pointer',
+                    WebkitAppearance: 'none',
+                    boxSizing: 'border-box'
+                  }} 
+                />
+              </div>
             
             <div>
               <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>교육명:</label>
@@ -609,41 +705,79 @@ export default function AssetReceiptPage() {
               </div>
             </div>
           </div>
+          </div>
         </section>
         )}
 
         {/* 자산 반납 시 */}
         {docType === 'return' && (
         <section style={{ marginTop: 40, marginBottom: 40 }}>
-          <p style={{ marginBottom: 20, textAlign: 'center' }}>
+          <p style={{ marginBottom: 48, textAlign: 'center' }}>
             상기 자산 반납을 확인합니다.
           </p>
 
-          {/* 상단 2열: 확인일 / 교육명 */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 32 }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>확인일:</label>
-              <input 
-                type="date" 
-                defaultValue={new Date().toISOString().split('T')[0]}
-                onClick={(e) => {
-                  e.currentTarget.showPicker?.();
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.showPicker?.();
-                }}
-                style={{ 
-                  width: '100%',
-                  padding: '10px 14px',
-                  border: '1px solid #ddd',
-                  borderRadius: 8,
-                  fontSize: 14,
-                  cursor: 'pointer',
-                  WebkitAppearance: 'none',
-                  boxSizing: 'border-box'
-                }} 
-              />
-            </div>
+          {/* PDF 출력용 요약 블록 (표 형태) */}
+          <div data-summary-block style={{ marginTop: 48, border: '1px solid #eee', borderRadius: 8, padding: 12 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11, tableLayout: 'fixed' }}>
+              <tbody>
+                <tr style={{ display: 'table-row' }}>
+                  <td style={{ padding: '6px 4px', fontWeight: 'bold', width: '8%', whiteSpace: 'nowrap' }}>확인일</td>
+                  <td style={{ padding: '6px 4px', width: '15%', whiteSpace: 'nowrap' }}>{new Date().toISOString().split('T')[0]}</td>
+                  <td style={{ padding: '6px 4px', fontWeight: 'bold', width: '8%', whiteSpace: 'nowrap' }}>교육명</td>
+                  <td style={{ padding: '6px 4px', width: '38%', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{course || '-'}</td>
+                  <td style={{ padding: '6px 4px', fontWeight: 'bold', width: '8%', whiteSpace: 'nowrap' }}>성명</td>
+                  <td style={{ padding: '6px 4px', width: '23%', position: 'relative' }}>
+                    <div style={{ display: 'inline-block', position: 'relative' }}>
+                      {name.trim() || '-'}
+                      {returnSignaturePreviewUrl && (
+                        <img
+                          src={returnSignaturePreviewUrl}
+                          alt="서명"
+                          style={{ 
+                            position: 'absolute', 
+                            top: '50%', 
+                            left: '100%', 
+                            transform: 'translate(-80%, -50%)',
+                            height: 30,
+                            opacity: 0.9,
+                            pointerEvents: 'none'
+                          }}
+                        />
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* 입력 폼 블록 */}
+          <div data-form-block>
+            {/* 상단 2열: 확인일 / 교육명 */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 32 }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>확인일:</label>
+                <input 
+                  type="date" 
+                  defaultValue={new Date().toISOString().split('T')[0]}
+                  onClick={(e) => {
+                    e.currentTarget.showPicker?.();
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.showPicker?.();
+                  }}
+                  style={{ 
+                    width: '100%',
+                    padding: '10px 14px',
+                    border: '1px solid #ddd',
+                    borderRadius: 8,
+                    fontSize: 14,
+                    cursor: 'pointer',
+                    WebkitAppearance: 'none',
+                    boxSizing: 'border-box'
+                  }} 
+                />
+              </div>
             
             <div>
               <label style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>교육명:</label>
@@ -786,6 +920,7 @@ export default function AssetReceiptPage() {
               </div>
             </div>
           </div>
+          </div>
         </section>
         )}
 
@@ -813,11 +948,118 @@ export default function AssetReceiptPage() {
           </button>
         </div>
 
-        <footer style={{ marginTop: 60, paddingTop: 24, borderTop: '1px solid rgb(224, 224, 224)', textAlign: 'center' }}>
-          <p style={{ fontSize: 12, color: 'rgb(102, 102, 102)', margin: 0 }}>
+        <footer style={{ marginTop: 8, marginBottom: 0, paddingTop: 4, paddingBottom: 0, borderTop: '1px solid rgb(224, 224, 224)', textAlign: 'center' }}>
+          <p style={{ fontSize: 10, color: 'rgb(102, 102, 102)', margin: 0 }}>
             © 2026 ㈜원티드랩. All rights reserved.
           </p>
         </footer>
+
+        <style jsx global>{`
+          /* 화면 기본: 요약 블록 숨김 */
+          article [data-summary-block] {
+            display: none !important;
+          }
+          
+          article thead[data-summary-block] {
+            display: none !important;
+          }
+          
+          article tbody[data-summary-block] {
+            display: none !important;
+          }
+
+          @media print {
+            body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+
+            main {
+              padding: 0 !important;
+              background: #fff !important;
+              min-height: auto !important;
+            }
+
+            article {
+              padding: 8mm 8mm !important;
+              box-shadow: none !important;
+              line-height: 2.25 !important;
+              font-size: 10px !important;
+            }
+
+            article p {
+              margin: 6px 0 !important;
+              line-height: 1.8 !important;
+            }
+            
+            article [data-hide-in-pdf],
+            article [data-hide-in-print] {
+              display: none !important;
+            }
+            
+            article [data-form-block] {
+              display: none !important;
+            }
+            
+            article thead[data-form-block] {
+              display: none !important;
+            }
+            
+            article tbody[data-form-block] {
+              display: none !important;
+            }
+            
+            article [data-summary-block] {
+              display: table-row-group !important;
+            }
+            
+            article thead[data-summary-block] {
+              display: table-header-group !important;
+            }
+            
+            article tbody[data-summary-block] {
+              display: table-row-group !important;
+            }
+          }
+
+          /* PDF 저장 시: 입력 폼 숨김 + 요약 표시 */
+          article[data-output-mode='1'] [data-form-block] {
+            display: none !important;
+          }
+          
+          article[data-output-mode='1'] thead[data-form-block] {
+            display: none !important;
+          }
+          
+          article[data-output-mode='1'] tbody[data-form-block] {
+            display: none !important;
+          }
+          
+          article[data-output-mode='1'] [data-summary-block] {
+            display: table-row-group !important;
+          }
+          
+          article[data-output-mode='1'] thead[data-summary-block] {
+            display: table-header-group !important;
+          }
+          
+          article[data-output-mode='1'] tbody[data-summary-block] {
+            display: table-row-group !important;
+          }
+          
+          article[data-output-mode='1'] [data-hide-in-pdf],
+          article[data-output-mode='1'] [data-hide-in-print] {
+            display: none !important;
+          }
+          article[data-output-mode='1'] {
+            line-height: 2.25 !important;
+            padding: 10px 32px 10px 60px !important;
+          }
+          article[data-output-mode='1'] p {
+            margin: 6.75px 0 !important;
+            line-height: 1.8 !important;
+          }
+        `}</style>
       </article>
     </main>
   );

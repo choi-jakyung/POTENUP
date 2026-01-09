@@ -129,23 +129,26 @@ export default function EducationalOutputConsentPage() {
     );
   };
   return (
-    <main style={{ background: '#f5f5f5', color: '#000', minHeight: '100vh', padding: '48px 24px' }}>
+    <main style={{ background: '#f5f5f5', color: '#000', minHeight: '100vh', padding: '80px 24px 48px 24px' }}>
       <article style={{ 
         maxWidth: 794, 
         width: '100%',
         margin: '0 auto', 
-        fontSize: 14, 
-        lineHeight: 1.9,
+        fontSize: 12, 
+        lineHeight: 1.5,
         background: '#fff',
-        padding: '40px 60px',
+        padding: '16px 32px',
+        boxSizing: 'border-box',
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
       }}>
-        <div style={{ marginBottom: 16 }}>
+        <div style={{ marginBottom: -60 }}>
           <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
-            <Image src="/wanted-logo.png" alt="wanted logo" width={96} height={96} style={{ objectFit: 'contain' }} unoptimized />
+            <div style={{ width: 150, height: 150, position: 'relative' }}>
+              <Image src="/wanted-logo.png" alt="wanted logo" width={150} height={150} style={{ objectFit: 'contain' }} unoptimized />
+            </div>
           </Link>
         </div>
-        <h1 style={{ fontSize: 24, fontWeight: 'bold', color: '#333', marginBottom: 40, textAlign: 'center' }}>
+        <h1 style={{ fontSize: 30, fontWeight: 'bold', color: '#333', marginTop: 0, marginBottom: 10, textAlign: 'center' }}>
           교육 산출물 활용 동의서
         </h1>
 
@@ -206,8 +209,8 @@ export default function EducationalOutputConsentPage() {
                   <div style={grid2}>
                     <div>
                       <label style={labelStyle}>서명일:</label>
-                      <input
-                        type="date"
+                <input 
+                  type="date" 
                         value={signatureDate}
                         onChange={(e) => setSignatureDate(e.target.value)}
                         onClick={(e) => e.currentTarget.showPicker?.()}
@@ -218,171 +221,171 @@ export default function EducationalOutputConsentPage() {
                     <div>
                       <label style={labelStyle}>교육명:</label>
                       <div ref={dropdownRef} style={{ position: 'relative' }}>
-                        <button
-                          type="button"
+                    <button
+                      type="button"
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             setIsCourseOpen(!isCourseOpen);
                           }}
-                          style={{
+                      style={{
                             ...inputStyle,
-                            background: '#fff',
-                            textAlign: 'left',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <span>{course || '선택'}</span>
+                        background: '#fff',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span>{course || '선택'}</span>
                           <span style={{ transform: isCourseOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>▼</span>
-                        </button>
-                        {isCourseOpen && (
-                          <div
-                            style={{
-                              position: 'absolute',
-                              top: '100%',
-                              left: 0,
-                              right: 0,
-                              marginTop: 4,
-                              border: '1px solid #ddd',
-                              borderRadius: 8,
-                              background: '#fff',
-                              zIndex: 10,
-                              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                              overflow: 'hidden',
-                            }}
-                          >
-                            {courses.map((courseOption, index) => (
+                    </button>
+                    {isCourseOpen && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '100%',
+                          left: 0,
+                          right: 0,
+                          marginTop: 4,
+                          border: '1px solid #ddd',
+                          borderRadius: 8,
+                          background: '#fff',
+                          zIndex: 10,
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {courses.map((courseOption, index) => (
                               <div
-                                key={courseOption}
+                            key={courseOption}
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  setCourse(courseOption);
-                                  setIsCourseOpen(false);
-                                }}
-                                style={{
-                                  padding: '12px 16px',
-                                  cursor: 'pointer',
-                                  borderBottom: index < courses.length - 1 ? '1px solid #f0f0f0' : 'none',
-                                  backgroundColor: course === courseOption ? '#e3f2fd' : '#fff',
+                              setCourse(courseOption);
+                              setIsCourseOpen(false);
+                            }}
+                            style={{
+                              padding: '12px 16px',
+                              cursor: 'pointer',
+                              borderBottom: index < courses.length - 1 ? '1px solid #f0f0f0' : 'none',
+                              backgroundColor: course === courseOption ? '#e3f2fd' : '#fff',
                                   transition: 'background-color 0.2s'
-                                }}
+                            }}
                                 onMouseEnter={(e) => { if (course !== courseOption) e.currentTarget.style.backgroundColor = '#f5f5f5'; }}
                                 onMouseLeave={(e) => { if (course !== courseOption) e.currentTarget.style.backgroundColor = '#fff'; }}
                               >
-                                {courseOption}
+                            {courseOption}
                               </div>
-                            ))}
-                          </div>
-                        )}
+                        ))}
                       </div>
-                    </div>
+                    )}
                   </div>
+              </div>
+            </div>
 
                   {/* 성명 / 정자서명란 */}
                   <div style={{ ...grid2, marginTop: 20, alignItems: 'start' }}>
                     <div>
                       <label style={labelStyle}>성명:</label>
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="성명을 입력하세요"
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="성명을 입력하세요"
                         style={inputStyle}
-                      />
+              />
                     </div>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                         <span style={{ fontWeight: 'bold' }}>정자서명란 :</span>
                         <span style={{ fontSize: 12 }}>(인)</span>
-                      </div>
+              </div>
                       <div style={{ position: 'relative', width: '100%' }}>
-                        <canvas
-                          ref={canvasRef}
-                          style={{
-                            width: '100%',
-                            height: 140,
-                            border: '1px solid #000',
-                            borderRadius: 8,
-                            background: '#fff',
-                            cursor: 'crosshair',
-                            touchAction: 'none',
-                          }}
-                          onPointerDown={start}
-                          onPointerMove={move}
-                          onPointerUp={end}
-                          onPointerLeave={end}
-                          onTouchStart={start}
-                          onTouchMove={move}
-                          onTouchEnd={end}
-                        />
-                        <button
-                          onClick={clear}
-                          style={{
-                            position: 'absolute',
-                            bottom: 8,
-                            right: 8,
-                            padding: '6px 10px',
-                            background: '#fff',
-                            border: '1px solid #ddd',
-                            borderRadius: 8,
-                            cursor: 'pointer',
-                            fontSize: 12,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 4,
-                          }}
-                        >
-                          🗑️ 지우기
-                        </button>
-                      </div>
+                  <canvas
+                    ref={canvasRef}
+                    style={{
+                      width: '100%',
+                      height: 140,
+                      border: '1px solid #000',
+                      borderRadius: 8,
+                      background: '#fff',
+                      cursor: 'crosshair',
+                      touchAction: 'none',
+                    }}
+                    onPointerDown={start}
+                    onPointerMove={move}
+                    onPointerUp={end}
+                    onPointerLeave={end}
+                    onTouchStart={start}
+                    onTouchMove={move}
+                    onTouchEnd={end}
+                  />
+                  <button
+                    onClick={clear}
+                    style={{
+                      position: 'absolute',
+                      bottom: 8,
+                      right: 8,
+                      padding: '6px 10px',
+                      background: '#fff',
+                      border: '1px solid #ddd',
+                      borderRadius: 8,
+                      cursor: 'pointer',
+                      fontSize: 12,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 4,
+                    }}
+                  >
+                    🗑️ 지우기
+                  </button>
+                </div>
                       <p style={{ fontSize: 12, color: '#555', marginTop: 8, marginBottom: 0 }}>
-                        ※ 마우스 또는 터치로 정자 서명해주세요.
-                      </p>
-                    </div>
-                  </div>
+                  ※ 마우스 또는 터치로 정자 서명해주세요.
+                </p>
+              </div>
+            </div>
 
                   {/* 주소 / 연락처 */}
                   <div style={{ ...grid2, marginTop: 20 }}>
                     <div>
                       <label style={labelStyle}>주소:</label>
-                      <input
-                        type="text"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        placeholder="주소를 입력하세요"
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="주소를 입력하세요"
                         style={inputStyle}
-                      />
+              />
                     </div>
                     <div>
                       <label style={labelStyle}>연락처:</label>
-                      <input
-                        type="tel"
+              <input
+                type="tel"
                         inputMode="numeric"
                         pattern="[0-9]*"
-                        value={contact}
+                value={contact}
                         onChange={(e) => setContact(sanitizeContactInput(e.target.value))}
                         placeholder="01012345678"
                         maxLength={11}
                         style={inputStyle}
-                      />
+              />
                     </div>
                   </div>
                 </>
               );
             })()}
           </div>
-          <div style={{ marginTop: 32, marginBottom: 24 }}>
+          <div data-hide-in-print style={{ marginTop: 32, marginBottom: 24 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
               <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} style={{ width: 18, height: 18, cursor: 'pointer' }} />
               <span style={{ fontSize: 14 }}>위 내용을 모두 확인하였으며, 이에 동의합니다.</span>
             </label>
           </div>
 
-          <div style={{ marginTop: 32, textAlign: 'center' }}>
+          <div data-hide-in-print style={{ marginTop: 32, textAlign: 'center' }}>
             <button
               type="button"
               onClick={() => { if (isFormValid()) alert('동의서가 제출되었습니다.'); }}
@@ -397,11 +400,42 @@ export default function EducationalOutputConsentPage() {
           </div>
         </section>
 
-        <footer style={{ marginTop: 60, paddingTop: 24, borderTop: '1px solid rgb(224, 224, 224)', textAlign: 'center' }}>
-          <p style={{ fontSize: 12, color: 'rgb(102, 102, 102)', margin: 0 }}>
+        <footer style={{ marginTop: 8, marginBottom: 0, paddingTop: 4, paddingBottom: 0, borderTop: '1px solid rgb(224, 224, 224)', textAlign: 'center' }}>
+          <p style={{ fontSize: 10, color: 'rgb(102, 102, 102)', margin: 0 }}>
             © 2026 ㈜원티드랩. All rights reserved.
           </p>
         </footer>
+
+        <style jsx global>{`
+          @media print {
+            body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+
+            main {
+              padding: 0 !important;
+              background: #fff !important;
+              min-height: auto !important;
+            }
+
+            article {
+              padding: 8mm 8mm !important;
+              box-shadow: none !important;
+              line-height: 2.25 !important;
+              font-size: 10px !important;
+            }
+
+            article p {
+              margin: 6px 0 !important;
+              line-height: 1.8 !important;
+            }
+            
+            article [data-hide-in-print] {
+              display: none !important;
+            }
+          }
+        `}</style>
       </article>
     </main>
   );
