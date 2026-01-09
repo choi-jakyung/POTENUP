@@ -82,8 +82,6 @@ export default function PledgePage() {
 
     try {
       mql?.addEventListener?.('change', onMqlChange);
-      // eslint-disable-next-line deprecation/deprecation
-      mql?.addListener?.(onMqlChange as any);
     } catch {
       // ignore
     }
@@ -94,8 +92,6 @@ export default function PledgePage() {
     return () => {
       try {
         mql?.removeEventListener?.('change', onMqlChange);
-        // eslint-disable-next-line deprecation/deprecation
-        mql?.removeListener?.(onMqlChange as any);
       } catch {
         // ignore
       }
