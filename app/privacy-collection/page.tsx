@@ -267,7 +267,7 @@ export default function PrivacyCollectionPage() {
           </Link>
         </div>
 
-        <h1 style={{ fontSize: 30, fontWeight: 'bold', color: '#333', marginTop: 0, marginBottom: 16, textAlign: 'center' }}>
+        <h1 style={{ fontSize: 30, fontWeight: 'bold', color: '#333', marginTop: 72, marginBottom: 16, textAlign: 'center' }}>
           개인정보 수집ㆍ이용ㆍ제공 동의서
         </h1>
 

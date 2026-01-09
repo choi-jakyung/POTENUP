@@ -369,7 +369,7 @@ export default function AssetReceiptPage() {
           </Link>
         </div>
         
-        <h1 style={{ fontSize: 30, fontWeight: 'bold', color: '#333', marginTop: 0, marginBottom: 10, textAlign: 'center' }}>
+        <h1 style={{ fontSize: 30, fontWeight: 'bold', color: '#333', marginTop: 72, marginBottom: 10, textAlign: 'center' }}>
           {docType === 'receipt' ? '자산지급 수령확인서' : '자산반납 확인서'}
         </h1>
 

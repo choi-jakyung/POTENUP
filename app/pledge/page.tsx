@@ -471,7 +471,7 @@ export default function PledgePage() {
         </div>
 
         {/* 제목 */}
-        <h1 style={{ fontSize: 30, fontWeight: 'bold', color: '#333', marginTop: 0, marginBottom: 10, textAlign: 'center' }}>
+        <h1 style={{ fontSize: 30, fontWeight: 'bold', color: '#333', marginTop: 72, marginBottom: 10, textAlign: 'center' }}>
           자산 관리 서약서
         </h1>
 

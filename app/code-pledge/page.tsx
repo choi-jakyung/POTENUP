@@ -238,7 +238,7 @@ export default function CodePledgePage() {
           </Link>
         </div>
 
-        <h1 style={{ fontSize: 30, fontWeight: 'bold', color: '#333', marginTop: 0, marginBottom: 10, textAlign: 'center' }}>
+        <h1 style={{ fontSize: 30, fontWeight: 'bold', color: '#333', marginTop: 72, marginBottom: 10, textAlign: 'center' }}>
           행동 강령 서약서
         </h1>
 
