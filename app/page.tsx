@@ -63,8 +63,8 @@ export default function Home() {
           <Image
             src="/wanted-logo.png"
             alt="wanted logo"
-            width={96}
-            height={96}
+            width={150}
+            height={48.42}
             style={{ objectFit: 'contain', marginBottom: 24 }}
             unoptimized
           />
