@@ -57,28 +57,6 @@ export default function Home() {
           borderRadius: 12,
         }}
       >
-        {/* 오른쪽 상단 POTENUP 로고 */}
-        <div style={{ 
-          position: 'absolute', 
-          top: 0, 
-          right: 0, 
-          zIndex: 10,
-          background: '#000',
-          padding: '8px 12px',
-          borderRadius: 8,
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-        }}>
-          <Link href="/">
-            <Image
-              src="/POTENUP B.png"
-              alt="POTENUP logo"
-              width={96}
-              height={96}
-              style={{ objectFit: 'contain', display: 'block' }}
-              unoptimized
-            />
-          </Link>
-        </div>
 
         {/* 헤더: 로고 */}
         <div style={{ marginBottom: 32, textAlign: 'center' }}>
