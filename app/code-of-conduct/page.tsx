@@ -255,14 +255,14 @@ export default function CodeOfConductPage() {
         <div style={{ marginBottom: -30 }}>
           <Link href="/" style={{ cursor: 'pointer', display: 'inline-block' }}>
             <div style={{ width: 80, height: 80, position: 'relative' }}>
-              <Image
-                src="/wanted-logo.png"
-                alt="wanted logo"
+          <Image
+            src="/wanted-logo.png"
+            alt="wanted logo"
                 width={80}
                 height={80}
-                style={{ objectFit: 'contain' }}
-                unoptimized
-              />
+            style={{ objectFit: 'contain' }}
+            unoptimized
+          />
             </div>
           </Link>
         </div>
@@ -356,8 +356,8 @@ export default function CodeOfConductPage() {
                   <div style={grid2}>
                     <div>
                       <label style={labelStyle}>서명일:</label>
-                      <input
-                        type="date"
+                <input 
+                  type="date" 
                         value={signatureDate}
                         onChange={(e) => setSignatureDate(e.target.value)}
                         onClick={(e) => e.currentTarget.showPicker?.()}
@@ -368,156 +368,156 @@ export default function CodeOfConductPage() {
                     <div>
                       <label style={labelStyle}>교육명:</label>
                       <div ref={dropdownRef} style={{ position: 'relative' }}>
-                        <button
-                          type="button"
+                    <button
+                      type="button"
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             setIsCourseOpen(!isCourseOpen);
                           }}
-                          style={{
+                      style={{
                             ...inputStyle,
-                            background: '#fff',
-                            textAlign: 'left',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <span>{course || '선택'}</span>
+                        background: '#fff',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span>{course || '선택'}</span>
                           <span style={{ transform: isCourseOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>▼</span>
-                        </button>
-                        {isCourseOpen && (
+                    </button>
+                    {isCourseOpen && (
                           <div style={{
-                            position: 'absolute',
-                            top: '100%',
-                            left: 0,
-                            right: 0,
-                            marginTop: 4,
-                            border: '1px solid #ddd',
-                            borderRadius: 8,
-                            background: '#fff',
-                            zIndex: 10,
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                            overflow: 'hidden',
+                          position: 'absolute',
+                          top: '100%',
+                          left: 0,
+                          right: 0,
+                          marginTop: 4,
+                          border: '1px solid #ddd',
+                          borderRadius: 8,
+                          background: '#fff',
+                          zIndex: 10,
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                          overflow: 'hidden',
                           }}>
-                            {courses.map((courseOption, index) => (
+                        {courses.map((courseOption, index) => (
                               <div
-                                key={courseOption}
+                            key={courseOption}
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  setCourse(courseOption);
-                                  setIsCourseOpen(false);
-                                }}
-                                style={{
-                                  padding: '12px 16px',
-                                  cursor: 'pointer',
-                                  borderBottom: index < courses.length - 1 ? '1px solid #f0f0f0' : 'none',
-                                  backgroundColor: course === courseOption ? '#e3f2fd' : '#fff',
+                              setCourse(courseOption);
+                              setIsCourseOpen(false);
+                            }}
+                            style={{
+                              padding: '12px 16px',
+                              cursor: 'pointer',
+                              borderBottom: index < courses.length - 1 ? '1px solid #f0f0f0' : 'none',
+                              backgroundColor: course === courseOption ? '#e3f2fd' : '#fff',
                                   transition: 'background-color 0.2s',
-                                }}
+                            }}
                                 onMouseEnter={(e) => { if (course !== courseOption) e.currentTarget.style.backgroundColor = '#f5f5f5'; }}
                                 onMouseLeave={(e) => { if (course !== courseOption) e.currentTarget.style.backgroundColor = '#fff'; }}
                               >
-                                {courseOption}
+                            {courseOption}
                               </div>
-                            ))}
-                          </div>
-                        )}
+                        ))}
                       </div>
-                    </div>
+                    )}
                   </div>
+              </div>
+            </div>
 
                   {/* 성명 / 정자서명란 */}
                   <div style={{ ...grid2, marginTop: 20, alignItems: 'start' }}>
                     <div>
                       <label style={labelStyle}>성명:</label>
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="성명을 입력하세요"
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="성명을 입력하세요"
                         style={inputStyle}
-                      />
+              />
                     </div>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                         <span style={{ fontWeight: 'bold' }}>정자서명란 :</span>
                         <span style={{ fontSize: 12 }}>(인)</span>
-                      </div>
+              </div>
                       <div style={{ position: 'relative', width: '100%' }}>
-                        <canvas
-                          ref={canvasRef}
-                          style={{
-                            width: '100%',
-                            height: 140,
-                            border: '1px solid #000',
-                            borderRadius: 8,
-                            background: '#fff',
-                            cursor: 'crosshair',
-                            touchAction: 'none',
-                          }}
-                          onPointerDown={start}
-                          onPointerMove={move}
-                          onPointerUp={end}
-                          onPointerLeave={end}
-                          onTouchStart={start}
-                          onTouchMove={move}
-                          onTouchEnd={end}
-                        />
-                        <button
+                  <canvas
+                    ref={canvasRef}
+                    style={{
+                      width: '100%',
+                      height: 140,
+                      border: '1px solid #000',
+                      borderRadius: 8,
+                      background: '#fff',
+                      cursor: 'crosshair',
+                      touchAction: 'none',
+                    }}
+                    onPointerDown={start}
+                    onPointerMove={move}
+                    onPointerUp={end}
+                    onPointerLeave={end}
+                    onTouchStart={start}
+                    onTouchMove={move}
+                    onTouchEnd={end}
+                  />
+                  <button
                           ref={clearButtonRef}
-                          onClick={clear}
-                          style={{
-                            position: 'absolute',
-                            bottom: 8,
-                            right: 8,
-                            padding: '6px 10px',
-                            background: '#fff',
-                            border: '1px solid #ddd',
-                            borderRadius: 8,
-                            cursor: 'pointer',
-                            fontSize: 12,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 4,
-                          }}
-                        >
-                          🗑️ 지우기
-                        </button>
-                      </div>
+                    onClick={clear}
+                    style={{
+                      position: 'absolute',
+                      bottom: 8,
+                      right: 8,
+                      padding: '6px 10px',
+                      background: '#fff',
+                      border: '1px solid #ddd',
+                      borderRadius: 8,
+                      cursor: 'pointer',
+                      fontSize: 12,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 4,
+                    }}
+                  >
+                    🗑️ 지우기
+                  </button>
+                </div>
                       <p style={{ fontSize: 12, color: '#555', marginTop: 8, marginBottom: 0 }}>
-                        ※ 마우스 또는 터치로 정자 서명해주세요.
-                      </p>
-                    </div>
-                  </div>
+                  ※ 마우스 또는 터치로 정자 서명해주세요.
+                </p>
+              </div>
+            </div>
 
                   {/* 주소 / 연락처 */}
                   <div style={{ ...grid2, marginTop: 20 }}>
                     <div>
                       <label style={labelStyle}>주소:</label>
-                      <input
-                        type="text"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        placeholder="주소를 입력하세요"
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="주소를 입력하세요"
                         style={inputStyle}
-                      />
+              />
                     </div>
                     <div>
                       <label style={labelStyle}>연락처:</label>
-                      <input
-                        type="tel"
+              <input
+                type="tel"
                         inputMode="numeric"
                         pattern="[0-9]*"
-                        value={contact}
+                value={contact}
                         onChange={(e) => setContact(sanitizeContactInput(e.target.value))}
                         placeholder="01012345678"
                         maxLength={11}
                         style={inputStyle}
-                      />
+              />
                     </div>
                   </div>
                 </>
